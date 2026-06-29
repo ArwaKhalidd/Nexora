@@ -17,17 +17,17 @@ export default function Hero() {
         <p className="text-center flex flex-col items-center justify-center">
           <span
             className="text-5xl text-center tracking-wide w-full font-extrabold font-mono 
-           bg-linear-to-b bg-clip-text text-transparent from-sky-800 to-sky-950 via-sky-900"
+           bg-linear-to-b bg-clip-text text-transparent from-sky-900 to-black"
           >
             Transform Learning into Measurable Success
           </span>
           <span
             className="text-2xl text-center tracking-wide mt-7 w-full font-extrabold font-mono
-           bg-linear-to-r bg-clip-text text-transparent from-black  to-gray-400"
+           bg-linear-to-r bg-clip-text text-transparent from-black  to-gray-500"
           >
             Learn Smarter. Analyze Better. Succeed Faster.
           </span>
-          <span className="text-gray-600 font-bold text-xl font-serif mt-5 w-[65%]">
+          <span className="text-gray-700 font-bold text-xl font-serif mt-5 w-[65%]">
             Nexora empowers students, educators, and institutions with
             intelligent analytics, personalized learning insights, and real-time
             performance tracking. Make better decisions, discover opportunities,

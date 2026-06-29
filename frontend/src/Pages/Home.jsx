@@ -1,5 +1,5 @@
 import Hero from "../Components/Hero/Hero";
-import HowItWorks from "../Components/HowItWorks/HowItWorks";
+import WhyCreated from "../Components/WhyCreated/WhyCreated";
 import Navbar from "../Components/Navbar/Navbar";
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
       <Navbar/>
       <main className="items-center justify-center flex-col flex h-auto overflow-x-hidden">
         <Hero />
-        <HowItWorks />
+        <WhyCreated />
       </main>
     </div>
   );
