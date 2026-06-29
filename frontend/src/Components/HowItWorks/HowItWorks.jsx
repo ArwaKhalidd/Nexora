@@ -1,6 +1,8 @@
 export default function HowItWorks() {
   return (
-    <div>HowItWorks</div>
+    <section className="flex items-center justify-center h-[80vh] ">
+
+    </section>
   )
 }
 
