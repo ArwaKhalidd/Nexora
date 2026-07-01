@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { SlLogin } from "react-icons/sl";
-import { FaArrowRight , FaArrowDown } from "react-icons/fa6";
-
+import { FaArrowRight ,FaArrowDown } from "react-icons/fa6";
 
 export default function Hero() {
   const navigate = useNavigate();
@@ -53,7 +52,7 @@ export default function Hero() {
               <p className="text-2xl font-black text-sky-800 sm:text-3xl">
                 {value}
               </p>
-              <p className="mt-1 text-[10px] text-center font-semibold uppercase text-slate-medium sm:text-sm">
+              <p className="mt-1 text-[10px] text-center items-center font-semibold uppercase text-slate-medium sm:text-sm">
                 {label}
               </p>
             </div>

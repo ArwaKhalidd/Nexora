@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBars, FaXmark } from "react-icons/fa6";
-import Logo from "/completelogo.png";
+import logo from '/completelogo.png'
 
 const navLinks = [
   { label: "Home", sectionId: "home" },
@@ -28,8 +28,8 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="w-full max-w-6xl rounded-2xl border border-white/70 bg-white/75 px-4 py-3 shadow-xl shadow-sky-900/10 backdrop-blur md:rounded-full md:px-6">
-      <div className="flex items-center justify-between gap-4 h-[8vh]">
+    <nav className="w-full max-w-6xl rounded-2xl border border-white/70 h-[8vh]  bg-white/75 px-4 py-3 shadow-xl shadow-sky-900/10 backdrop-blur md:rounded-full md:px-6">
+      <div className="flex items-center justify-between gap-4 h-full">
         <button
           type="button"
           onClick={() => navigate("/")}
@@ -37,9 +37,9 @@ export default function Navbar() {
           aria-label="Go to home"
         >
           <img
-            src={Logo}
+            src={logo}
             alt="Nexora Logo"
-            className="h-full w-35"
+            className="w-30"
           />
         </button>
 
