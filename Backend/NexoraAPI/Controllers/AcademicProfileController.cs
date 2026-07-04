@@ -21,10 +21,10 @@ namespace NexoraAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProfile()
         {
-            var studentId = int.Parse(
+            var userId = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            var profile = await _service.GetProfileAsync(studentId);
+            var profile = await _service.GetProfileAsync(userId);
 
             if (profile == null)
                 return NotFound();
@@ -35,10 +35,10 @@ namespace NexoraAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateProfile(UpdateAcademicProfileDto dto)
         {
-            var studentId = int.Parse(
+            var userId = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            var updated = await _service.UpdateProfileAsync(studentId, dto);
+            var updated = await _service.UpdateProfileAsync(userId, dto);
 
             if (!updated)
                 return NotFound();

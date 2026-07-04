@@ -1,7 +1,9 @@
+using NexoraAPI.Models;
+
 namespace NexoraAPI.Services.Interfaces
 {
     public interface IJwtService
     {
-        string GenerateToken(int studentId);
+        string GenerateToken(User user);
     }
 }
