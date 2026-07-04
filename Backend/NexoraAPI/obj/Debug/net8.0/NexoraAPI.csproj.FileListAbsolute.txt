@@ -290,7 +290,7 @@ D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Debug\net8.
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Debug\net8.0\staticwebassets.development.json
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Debug\net8.0\swae.build.ex.cache
-D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Debug\net8.0\NexoraAPI.csproj.Up2Date
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Debug\net8.0\NexoraAPI.genruntimeconfig.cache
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Debug\net8.0\ref\NexoraAPI.dll
+D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\bin\Debug\net8.0\dotnet-tools.json

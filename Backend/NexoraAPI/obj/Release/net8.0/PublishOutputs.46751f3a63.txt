@@ -1,6 +1,7 @@
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Release\net8.0\PubTmp\Out\NexoraAPI.exe
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Release\net8.0\PubTmp\Out\appsettings.Development.json
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Release\net8.0\PubTmp\Out\appsettings.json
+D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Release\net8.0\PubTmp\Out\dotnet-tools.json
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Release\net8.0\PubTmp\Out\NexoraAPI.dll
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Release\net8.0\PubTmp\Out\NexoraAPI.runtimeconfig.json
 D:\khloud mostafa\COURSES\رواد\Mega\Nexora\Backend\NexoraAPI\obj\Release\net8.0\PubTmp\Out\NexoraAPI.pdb
