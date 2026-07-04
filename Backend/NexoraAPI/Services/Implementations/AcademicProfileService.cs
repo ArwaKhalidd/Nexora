@@ -14,33 +14,52 @@ namespace NexoraAPI.Services.Implementations
             _context = context;
         }
 
-        public async Task<AcademicProfileDto?> GetProfileAsync(int studentId)
+        public async Task<UserProfileDto?> GetProfileAsync(int userId)
         {
-            var student = await _context.StudentInfos
-                .FirstOrDefaultAsync(s => s.IdStudent == studentId);
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (student == null)
+            if (user == null)
                 return null;
 
-            return new AcademicProfileDto
+            StudentInfo? student = null;
+            if (user.StudentId.HasValue)
             {
-                StudentId = student.IdStudent,
-                Gender = student.Gender,
-                HighestEducation = student.HighestEducation,
-                AgeBand = student.AgeBand,
-                Region = student.Region,
-                ImdBand = student.ImdBand,
-                Disability = student.Disability,
-                StudiedCredits = student.StudiedCredits,
-                NumOfPrevAttempts = student.NumOfPrevAttempts,
-                FinalResult = student.FinalResult
+                student = await _context.StudentInfos
+                    .FirstOrDefaultAsync(s => s.IdStudent == user.StudentId.Value);
+            }
+
+            return new UserProfileDto
+            {
+                // User Details
+                StudentId = user.StudentId,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Role = user.Role.ToString(),
+                EmailVerified = user.EmailVerified,
+
+                // Academic Details
+                Gender = student?.Gender,
+                HighestEducation = student?.HighestEducation,
+                AgeBand = student?.AgeBand,
+                Region = student?.Region,
+                ImdBand = student?.ImdBand,
+                Disability = student?.Disability,
+                StudiedCredits = student?.StudiedCredits,
+                NumOfPrevAttempts = student?.NumOfPrevAttempts,
+                FinalResult = student?.FinalResult
             };
         }
 
-        public async Task<bool> UpdateProfileAsync(int studentId, UpdateAcademicProfileDto dto)
+        public async Task<bool> UpdateProfileAsync(int userId, UpdateAcademicProfileDto dto)
         {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null || !user.StudentId.HasValue)
+                return false;
+
             var student = await _context.StudentInfos
-                .FirstOrDefaultAsync(s => s.IdStudent == studentId);
+                .FirstOrDefaultAsync(s => s.IdStudent == user.StudentId.Value);
 
             if (student == null)
                 return false;
