@@ -16,7 +16,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("ReactPolicy", builder =>
+    options.AddPolicy("AllowReact", builder =>
     {
         // Allow React app at localhost:5173
         builder.WithOrigins("http://localhost:5173")
@@ -113,7 +113,7 @@ app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
 
-app.UseCors("ReactPolicy");
+app.UseCors("AllowReact");
 
 app.UseAuthentication();
 app.UseAuthorization();
