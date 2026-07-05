@@ -106,7 +106,7 @@ export default function Navbar() {
         </div>
 
         {isOpen && (
-          <div className="mt-4 border-t border-sky-100 pt-4 md:hidden">
+          <div className="mt-4 rounded-2xl bg-white/95  shadow-xl shadow-sky-900/10 backdrop-blur  p-4 md:hidden">
             <ul className="flex flex-col gap-1">
               {navLinks.map((item) => (
                 <li
