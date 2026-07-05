@@ -5,11 +5,12 @@ import Loader from "../../Components/Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IoHome } from "react-icons/io5";
+import { register } from "../../Services/AuthServices";
 
 export default function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  // formData 
+  // formData
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,22 +20,57 @@ export default function Register() {
     confirmPassword: "",
   });
 
-  const handleSubmit =(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-  }
+    if (
+      !formData.firstName.trim() ||
+      !formData.lastName.trim() ||
+      !formData.email.trim() ||
+      !formData.password.trim() ||
+      !formData.role
+    ) {
+      alert("Please fill all required fields.");
+      return;
+    }
 
-  //habdle change 
-  const handleChange=(e)=>{
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+    try {
+      setLoading(true);
+      const payload = {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        role: Number(formData.role),
+      };
+      await register(payload);
+      alert("account created successfully");
+      navigate("/signin");
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data ||
+        "Failed to create your account.";
+
+      alert(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //habdle change
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       // this line to take the name of the input field automatically
-      [e.target.name] : e.target.value,
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
   // validation using js
   //const [errors, setErrors] = useState({});
-
 
   useEffect(() => {
     if (loading) {
@@ -120,7 +156,7 @@ export default function Register() {
           </div>
 
           <form
-          onSubmit={handleSubmit}
+            onSubmit={handleSubmit}
             className="w-full md:w-[50%] md:h-[95%] rounded-2xl bg-transparent
            p-1 text-sky-900 overflow-y-auto max-h-full"
           >
@@ -152,8 +188,8 @@ export default function Register() {
 
               <div className="relative w-full">
                 <input
-                value={formData.lastName}
-                onChange={handleChange}
+                  value={formData.lastName}
+                  onChange={handleChange}
                   type="text"
                   placeholder=" "
                   name="lastName"
@@ -181,14 +217,14 @@ export default function Register() {
 
             <div className="relative mb-4">
               <select
-              name="role"
+                name="role"
                 value={formData.role}
                 onChange={handleChange}
                 className="peer w-full cursor-pointer rounded-lg border border-gray-300 bg-sky-100 px-3 pb-2 pt-6 font-serif font-semibold text-sky-900 outline-none transition focus:border-sky-400"
               >
                 <option value="" disabled hidden></option>
-                <option value="student">Student</option>
-                <option value="instructor">Instructor</option>
+                <option value={0}>Student</option>
+                <option value={1}>Tutor</option>
               </select>
 
               <label className="absolute left-3 top-2 text-start text-xs text-sky-950 transition-all peer-focus:text-sky-700">
@@ -214,7 +250,7 @@ export default function Register() {
               <input
                 type="password"
                 placeholder=" "
-                value={formData.confrimPassword}
+                value={formData.confirmPassword}
                 onChange={handleChange}
                 name="confirmPassword"
                 className="peer w-full rounded-lg border border-gray-300 bg-sky-100 px-3 pb-2 pt-6 font-serif font-semibold text-sky-900 outline-none transition focus:border-sky-400"
