@@ -30,9 +30,11 @@ Traditional learning platforms often provide grades without meaningful insights.
 
 ### Backend
 - ASP.NET Core 8 Web API
+- - SignalR
 - Entity Framework Core
+- Clean Architecture
 - SQL Server
-- SignalR
+
 
 ### Tools
 - Git & GitHub
