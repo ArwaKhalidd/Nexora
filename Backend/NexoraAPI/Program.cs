@@ -14,6 +14,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Controllers
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactPolicy", builder =>
+    {
+        // Allow React app at localhost:5173
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 // JWT Settings
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
@@ -101,6 +112,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
+
+app.UseCors("ReactPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
