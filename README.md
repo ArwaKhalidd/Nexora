@@ -89,10 +89,9 @@ dotnet run
 
 
 ## Screenshots
+<img src="./frontend/public.home.png">
 <img src="./frontend/public/why.png">
 <img src="./frontend/public/queations.png">
-
-
 
 
 ## License
