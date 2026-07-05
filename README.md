@@ -32,6 +32,7 @@ Traditional learning platforms often provide grades without meaningful insights.
 - ASP.NET Core 8 Web API
 - Entity Framework Core
 - SQL Server
+- SignalR
 
 ### Tools
 - Git & GitHub
