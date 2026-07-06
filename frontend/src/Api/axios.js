@@ -5,7 +5,6 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
 });
 // to send the token automatically
 api.interceptors.request.use((config) => {
@@ -13,6 +12,6 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  return config ; 
+  return config;
 });
 export default api;
