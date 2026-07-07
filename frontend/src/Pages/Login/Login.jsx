@@ -82,7 +82,7 @@ export default function SignIn() {
       });
 
       setTimeout(() => {
-        navigate("/my-dashboard");
+        navigate("/dashboard");
       }, 2800);
     } catch (error) {
       const message =

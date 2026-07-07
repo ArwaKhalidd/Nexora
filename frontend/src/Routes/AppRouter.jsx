@@ -15,8 +15,8 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<GlobalDashboard />} />
-        <Route path="/my-dashboard" element={<MyDashboard />} />
+        {/* <Route path="/dashboard" element={<GlobalDashboard />} /> */}
+        <Route path="/dashboard" element={<MyDashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/recommendations" element={<Recommendation />} />

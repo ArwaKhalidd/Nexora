@@ -8,15 +8,15 @@ import {
   Settings,
 } from "lucide-react";
 
-export const sidebarLinks = [
+export const sidebarLinksForStudent = [
+  // {
+  //   path: "/dashboard",
+  //   label: "Global Dashboard",
+  //   icon: LayoutDashboard,
+  // },
   {
     path: "/dashboard",
-    label: "Global Dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    path: "/my-dashboard",
-    label: "My Dashboard",
+    label: "Dashboard",
     icon: House,
   },
   {
@@ -33,6 +33,39 @@ export const sidebarLinks = [
     path: "/recommendations",
     label: "Recommendations",
     icon: Lightbulb,
+  },
+  {
+    path: "/reports",
+    label: "Reports",
+    icon: ChartColumn,
+  },
+  {
+    path: "/settings",
+    label: "Settings",
+    icon: Settings,
+  },
+];
+
+export const sidebarLinksForAdmin = [
+  // {
+  //   path: "/dashboard",
+  //   label: "Global Dashboard",
+  //   icon: LayoutDashboard,
+  // },
+  {
+    path: "/dashboard",
+    label: "Dashboard",
+    icon: House,
+  },
+  {
+    path: "/profile",
+    label: "Profile",
+    icon: User,
+  },
+  {
+    path: "/courses",
+    label: "Courses",
+    icon: BookOpen,
   },
   {
     path: "/reports",

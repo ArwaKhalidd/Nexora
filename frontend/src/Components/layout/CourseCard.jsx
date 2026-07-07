@@ -1,17 +1,21 @@
 import { Link } from "react-router-dom";
+import DropdownMenuComponent from "./DropDownMenuComponent";
 
 const CourseCard = ({ course }) => {
   return (
     <Link
       to="/courses"
-      className="block bg-white rounded-lg border border-[#E5E7EB] p-3 pb-1 w-full cursor-pointer hover:border-primary-container transition-colors"
+      className="block bg-white rounded-lg border border-[#E5E7EB] p-3 pb-1 w-full cursor-pointer hover:border-primary-container transition-colors relative"
     >
-      <div>
+      <div className="relative">
         <img
           src={`${course.image}`}
           alt={`${course.title} thumbnail`}
           className="w-full h-52 object-cover rounded-t-md"
         />
+        <div className="absolute top-3 right-3 z-100">
+          <DropdownMenuComponent />
+        </div>
       </div>
 
       <div className="py-4">

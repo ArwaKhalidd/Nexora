@@ -1,32 +1,53 @@
-import { sidebarLinks } from "@/constants";
+import { sidebarLinksForAdmin, sidebarLinksForStudent } from "@/constants";
 import { NavLink, useLocation } from "react-router-dom";
 import Logo from "./Logo";
+import { getCurrentUser } from "@/Services/user";
+import { useEffect, useState } from "react";
+import SidebarLink from "./SidebarLink";
 
 const SidebarLg = () => {
+  const [user, setUser] = useState({});
   const pathName = useLocation();
+
+  useEffect(() => {
+    getCurrentUser().then((res) => {
+      if (res) {
+        setUser(res);
+      }
+    });
+  }, []);
+
   return (
     <aside className="hidden md:flex md:flex-col md:items-center md:gap-[22px]  fixed top-0 left-0 h-screen w-[230px] p-4 pt-5 bg-white border-e border-e-[#C3C6D7] shadow-sm">
       <Logo />
-      <ul className="flex flex-col gap-4 mt-4">
-        {sidebarLinks.map((link) => {
-          const Icon = link.icon;
-          return (
-            <NavLink
-              key={link.path}
-              to={link.path}
-              className={`flex items-center gap-3 py-2.5 px-3 transition-colors rounded-lg cursor-pointer ${pathName.pathname === link.path ? "bg-primary-container" : "hover:bg-primary-container/10"}`}
-            >
-              <Icon
-                className={`${pathName.pathname === link.path ? "text-white " : "text-dark"} h-5 w-5`}
-              />
-              <p
-                className={`text-nav ${pathName.pathname === link.path ? "text-white font-medium" : "text-slate-dark font-bold"}`}
-              >
-                {link.label}
-              </p>
-            </NavLink>
-          );
-        })}
+      <ul className=" w-full flex flex-col gap-4 mt-4">
+        {user.role === "Student"
+          ? sidebarLinksForStudent.map((link) => {
+              const Icon = link.icon;
+              return user ? (
+                <SidebarLink
+                  key={link.path}
+                  link={link}
+                  pathName={pathName}
+                  Icon={Icon}
+                />
+              ) : (
+                <div className="animate-pulse bg-slate-light h-10 rounded-lg w-full "></div>
+              );
+            })
+          : sidebarLinksForAdmin.map((link) => {
+              const Icon = link.icon;
+              return user ? (
+                <SidebarLink
+                  key={link.path}
+                  link={link}
+                  pathName={pathName}
+                  Icon={Icon}
+                />
+              ) : (
+                <div className="animate-pulse bg-slate-light h-10 rounded-lg w-full "></div>
+              );
+            })}
       </ul>
     </aside>
   );

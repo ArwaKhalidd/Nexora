@@ -25,11 +25,13 @@ const Courses = () => {
             id="category"
             className="w-[300px] border border-slate-light px-4 py-2 rounded-sm text-body text-slate-medium font-normal"
           >
-            <option value="" disabled selected hidden>
+            <option value="" disabled>
               Filter by category
             </option>
             {courses.map((course) => (
-              <option value={course.category}>{course.title}</option>
+              <option key={course.id} value={course.category}>
+                {course.title}
+              </option>
             ))}
           </select>
         </div>

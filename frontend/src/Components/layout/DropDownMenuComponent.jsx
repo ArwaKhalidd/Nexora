@@ -1,28 +1,52 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/Components/Ui/dropdown-menu";
+import { getCurrentUser } from "@/Services/user";
+import {
+  EllipsisVertical,
+  PencilIcon,
+  ShareIcon,
+  TrashIcon,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 const DropdownMenuComponent = () => {
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    getCurrentUser().then((user) => {
+      if (res) {
+        setUser(user);
+      }
+    });
+  }, []);
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-8 cursor-pointer">
-          <img
-            src="/assets/icons/dots.svg"
-            alt="more-actions"
-            className="cursor-pointer w-[5px] h-[16px]"
-          />
-        </Button>
+      <DropdownMenuTrigger>
+        <EllipsisVertical className="text-white text-title cursor-pointer" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Duplicate</DropdownMenuItem>
+      <DropdownMenuContent>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <PencilIcon />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <ShareIcon />
+            Share
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem variant="destructive">
+            <TrashIcon />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
