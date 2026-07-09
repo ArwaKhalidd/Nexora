@@ -2,7 +2,19 @@ namespace NexoraAPI.DTOs.AcademicProfile
 {
     public class AcademicProfileDto
     {
-        public int StudentId { get; set; }
+        // Personal Details
+        public string FirstName { get; set; } = string.Empty;
+
+        public string LastName { get; set; } = string.Empty;
+
+        public string Email { get; set; } = string.Empty;
+
+        public string Role { get; set; } = string.Empty;
+
+        public bool EmailVerified { get; set; }
+
+        // Student/Academic Details
+        public int? StudentId { get; set; }
 
         public string? Gender { get; set; }
 

@@ -33,7 +33,7 @@ namespace NexoraAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProfile(UpdateAcademicProfileDto dto)
+        public async Task<IActionResult> UpdateProfile(AcademicProfileDto dto)
         {
             var userId = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)!);

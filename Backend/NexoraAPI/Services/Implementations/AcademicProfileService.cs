@@ -14,7 +14,7 @@ namespace NexoraAPI.Services.Implementations
             _context = context;
         }
 
-        public async Task<UserProfileDto?> GetProfileAsync(int userId)
+        public async Task<AcademicProfileDto?> GetProfileAsync(int userId)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Id == userId);
@@ -29,7 +29,7 @@ namespace NexoraAPI.Services.Implementations
                     .FirstOrDefaultAsync(s => s.IdStudent == user.StudentId.Value);
             }
 
-            return new UserProfileDto
+            return new AcademicProfileDto
             {
                 // User Details
                 StudentId = user.StudentId,
@@ -52,7 +52,7 @@ namespace NexoraAPI.Services.Implementations
             };
         }
 
-        public async Task<bool> UpdateProfileAsync(int userId, UpdateAcademicProfileDto dto)
+        public async Task<bool> UpdateProfileAsync(int userId, AcademicProfileDto dto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)

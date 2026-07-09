@@ -13,8 +13,8 @@ namespace NexoraAPI.Services.Interfaces
 {
     public interface IAcademicProfileService
     {
-        Task<UserProfileDto?> GetProfileAsync(int userId);
+        Task<AcademicProfileDto?> GetProfileAsync(int userId);
 
-        Task<bool> UpdateProfileAsync(int userId, UpdateAcademicProfileDto dto);
+        Task<bool> UpdateProfileAsync(int userId, AcademicProfileDto dto);
     }
 }
