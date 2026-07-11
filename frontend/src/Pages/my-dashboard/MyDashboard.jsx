@@ -1,14 +1,16 @@
 import DashboardLayout from "@/mainLayout/DashboardLayout";
-import MainHeading from "@/Components/layout/MainHeading";
-import React from "react";
+import ProgressCard from "@/Components/layout/ProgressCard";
 
 const MyDashboard = () => {
   return (
     <DashboardLayout>
-      <MainHeading
-        title="My Dashboard"
-        description="Here's an overview of your dashboard"
-      />
+      <div className="w-full h-full">
+        {/*top*/}
+        <div className="flex items-center justify-end ">
+          <ProgressCard />
+        </div>
+        {/*bottom*/}
+      </div>
     </DashboardLayout>
   );
 };

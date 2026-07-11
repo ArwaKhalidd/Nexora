@@ -55,7 +55,8 @@ export default function Navbar() {
   return (
     <>
       {loading && <Loader />}
-      <nav className="w-full max-w-6xl rounded-2xl border border-white/70 h-[8vh]  bg-white/75 px-4 py-3 shadow-xl shadow-sky-900/10 backdrop-blur md:rounded-full md:px-6">
+      <nav className="w-full max-w-6xl rounded-2xl border border-white/70 h-[8vh] 
+       bg-white/75 px-4 py-3 shadow-xl shadow-sky-900/10 backdrop-blur md:rounded-full md:px-6">
         <div className="flex items-center justify-between gap-4 h-full">
           <button
             type="button"

@@ -44,7 +44,8 @@ const SidebarLg = () => {
                     key={link.path}
                     link={link}
                     pathName={pathName}
-                    Icon={Icon}
+                    Icon={Icon} 
+                    
                   />
                 ) : (
                   <div className="animate-pulse bg-slate-light h-10 rounded-lg w-full "></div>
