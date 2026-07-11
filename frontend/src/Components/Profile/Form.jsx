@@ -62,13 +62,19 @@ export default function Form() {
     handleGetInfo();
   }, []);
 
+  // Shared classes so every input/select lines up and matches width
+  const fieldWrapClass = "flex flex-col gap-2 w-full";
+  const labelClass = "text-xl text-sky-900";
+  const inputClass =
+    "w-full bg-sky-600/10 text-black p-2.5 rounded-md";
+
   return (
     <section className="mt-4 bg-white/90 shadow-2xl shadow-sky-900/10 rounded-3xl backdrop-blur p-6 pt-10 ">
       <div className="flex flex-col gap-10">
         {/*  first name, last name  */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="relative ">
-            <label htmlFor="firstName" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="firstName" className={labelClass}>
               First Name
             </label>
             <input
@@ -77,11 +83,11 @@ export default function Form() {
               onChange={(e) => setForm({ ...form, firstName: e.target.value })}
               type="text"
               placeholder="First Name"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
-          <div className="relative">
-            <label htmlFor="lastName" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="lastName" className={labelClass}>
               Last Name
             </label>
             <input
@@ -90,26 +96,26 @@ export default function Form() {
               onChange={(e) => setForm({ ...form, lastName: e.target.value })}
               type="text"
               placeholder="Last Name"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
         </div>
         {/*  email, role */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="relative">
-            <label htmlFor="email" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="email" className={labelClass}>
               Email
             </label>
             <input
               id="email"
               type="text"
               value={form.email || ""}
-              className="input-mobile w-[50%]"
+              className={inputClass}
               disabled
             />
           </div>
-          <div className="relative">
-            <label htmlFor="role" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="role" className={labelClass}>
               Role
             </label>
             <input
@@ -117,28 +123,28 @@ export default function Form() {
               disabled={true}
               value={form.role || ""}
               type="text"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
         </div>
         {/*  gender, studentID  */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="relative">
-            <label htmlFor="gender" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="gender" className={labelClass}>
               Gender
             </label>
             <select
               value={form.gender || ""}
               onChange={(e) => setForm({ ...form, gender: e.target.value })}
               id="gender"
-              className="select"
+              className={`select ${inputClass}`}
             >
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
           </div>
-          <div className="relative">
-            <label htmlFor="studentId" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="studentId" className={labelClass}>
               Student ID
             </label>
             <input
@@ -150,14 +156,14 @@ export default function Form() {
               }
               type="text"
               placeholder="Student ID"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
         </div>
         {/*  region , imd band  */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="relative">
-            <label htmlFor="region" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="region" className={labelClass}>
               Region
             </label>
             <input
@@ -166,11 +172,11 @@ export default function Form() {
               value={form.region || ""}
               onChange={(e) => setForm({ ...form, region: e.target.value })}
               placeholder="Region"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
-          <div className="relative">
-            <label htmlFor="imdBand" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="imdBand" className={labelClass}>
               IMD Band
             </label>
             <input
@@ -179,14 +185,14 @@ export default function Form() {
               onChange={(e) => setForm({ ...form, imdBand: e.target.value })}
               type="text"
               placeholder="IMD Band"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
         </div>
         {/*  age band, highest education  */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="relative">
-            <label htmlFor="ageBand" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="ageBand" className={labelClass}>
               Age Band
             </label>
             <input
@@ -195,14 +201,11 @@ export default function Form() {
               onChange={(e) => setForm({ ...form, ageBand: e.target.value })}
               type="text"
               placeholder="Age Band"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
-          <div className="relative">
-            <label
-              htmlFor="highestEducation"
-              className="text-xl text-sky-900 mr-2"
-            >
+          <div className={fieldWrapClass}>
+            <label htmlFor="highestEducation" className={labelClass}>
               Highest Education
             </label>
             <input
@@ -213,17 +216,14 @@ export default function Form() {
                 setForm({ ...form, highestEducation: e.target.value })
               }
               placeholder="Highest Education"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
         </div>
         {/*  studiedCredits, numOfPrevAttempts  */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="relative">
-            <label
-              htmlFor="studiedCredits"
-              className="text-xl text-sky-900 mr-2"
-            >
+          <div className={fieldWrapClass}>
+            <label htmlFor="studiedCredits" className={labelClass}>
               Studied Credits
             </label>
             <input
@@ -234,14 +234,11 @@ export default function Form() {
                 setForm({ ...form, studiedCredits: Number(e.target.value) })
               }
               placeholder="Studied Credits"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
-          <div className="relative">
-            <label
-              htmlFor="numOfPrevAttempts"
-              className="text-xl text-sky-900 mr-2 "
-            >
+          <div className={fieldWrapClass}>
+            <label htmlFor="numOfPrevAttempts" className={labelClass}>
               Number of Previous Attempts
             </label>
             <input
@@ -255,14 +252,14 @@ export default function Form() {
                 })
               }
               placeholder="Number of Previous Attempts"
-              className="input-mobile w-[50%]"
+              className={inputClass}
             />
           </div>
         </div>
         {/*  disability, final result  */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="relative">
-            <label htmlFor="disability" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="disability" className={labelClass}>
               Disability
             </label>
             <input
@@ -271,11 +268,11 @@ export default function Form() {
               value={form.disability || ""}
               onChange={(e) => setForm({ ...form, disability: e.target.value })}
               placeholder="Disability"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
-          <div className="relative">
-            <label htmlFor="finalResult" className="text-xl text-sky-900 mr-2">
+          <div className={fieldWrapClass}>
+            <label htmlFor="finalResult" className={labelClass}>
               Final Result
             </label>
             <input
@@ -286,14 +283,14 @@ export default function Form() {
                 setForm({ ...form, finalResult: e.target.value })
               }
               placeholder="Final Result"
-              className="input-mobile"
+              className={inputClass}
             />
           </div>
         </div>
 
         <button
           onClick={handleUpdateProfile}
-          className="bg-sky-950 font-bold hover:bg-sky-800 duration-700 text-sky-50  w-[50%] md:w-[10%] mt-10 p-2 rounded-xl cursor-pointer"
+          className="bg-sky-950 font-bold hover:bg-sky-800 duration-700 text-sky-50  w-[50%] md:w-[20%] mt-10 p-2 rounded-xl cursor-pointer"
         >
           Update Profile
         </button>
