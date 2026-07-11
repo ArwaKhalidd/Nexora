@@ -5,12 +5,16 @@ using Microsoft.OpenApi.Models;
 using NexoraAPI.Helpers;
 using NexoraAPI.Hubs;
 using NexoraAPI.Models;
+using NexoraAPI.Services;
 using NexoraAPI.Services.implementations;
 using NexoraAPI.Services.Implementations;
 using NexoraAPI.Services.Interfaces;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpClient<NexoraAPI.Services.AiRecommendationService>();
 
 // Add Controllers
 builder.Services.AddControllers();
@@ -18,12 +22,12 @@ builder.Services.AddControllers();
 // Add SignalR
 builder.Services.AddSignalR();
 
+// CORS Configuration - Updated to AllowAll for smooth frontend integration
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact", builder =>
+    options.AddPolicy("AllowAll", builder =>
     {
-        // Allow React app at localhost:5173
-        builder.WithOrigins("http://localhost:5173")
+        builder.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
@@ -62,6 +66,11 @@ builder.Services.AddAuthentication(options =>
 
 // Dependency Injection
 builder.Services.AddScoped<IJwtService, JwtService>();
+
+builder.Services.AddScoped<AiRecommendationService>();
+builder.Services.AddScoped<StudentProfileService>();
+builder.Services.AddScoped<RecommendationEngineService>();
+builder.Services.AddScoped<ResourceService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAcademicProfileService, AcademicProfileService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
@@ -124,7 +133,8 @@ app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
 
-app.UseCors("AllowReact");
+// Apply the updated CORS policy
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
