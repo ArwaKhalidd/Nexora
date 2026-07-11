@@ -14,8 +14,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpClient<NexoraAPI.Services.AiRecommendationService>();
-
 // Add Controllers
 builder.Services.AddControllers();
 
@@ -65,12 +63,11 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Dependency Injection
-builder.Services.AddScoped<IJwtService, JwtService>();
-
-builder.Services.AddScoped<AiRecommendationService>();
 builder.Services.AddScoped<StudentProfileService>();
 builder.Services.AddScoped<RecommendationEngineService>();
 builder.Services.AddScoped<ResourceService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAcademicProfileService, AcademicProfileService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
@@ -124,14 +121,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
-app.UseDeveloperExceptionPage();
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 // Configure HTTP pipeline
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 // Apply the updated CORS policy
 app.UseCors("AllowAll");

@@ -88,33 +88,5 @@ namespace NexoraAPI.Controllers
 
             return Ok(response);
         }
-
-        // ============================================================
-        // AI Academic Assistant
-        // ============================================================
-        [HttpPost("chat")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChatWithAi(
-            [FromBody] ChatRequest request,
-            [FromServices] AiRecommendationService aiService)
-        {
-            if (string.IsNullOrWhiteSpace(request.Message))
-            {
-                return BadRequest(new ApiErrorDto
-                {
-                    Message = "Message cannot be empty."
-                });
-            }
-
-            var reply = await aiService.GetChatbotResponse(
-                request.StudentId,
-                request.Message);
-
-            return Ok(new ChatResponseDto
-            {
-                Response = reply
-            });
-        }
     }
 }

@@ -17,7 +17,5 @@
         public List<string> Skills { get; set; } = new();
 
         public List<string> WeakSubjects { get; set; } = new();
-
-        public List<CourseRecommendationDto> RecommendedCourses { get; set; } = new();
     }
 }
