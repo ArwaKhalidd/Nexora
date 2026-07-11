@@ -90,14 +90,14 @@ namespace NexoraAPI.Services.Implementations
 
                 if (student != null)
                 {
-                    student.Gender = dto.Gender;
-                    student.HighestEducation = dto.HighestEducation;
-                    student.AgeBand = dto.AgeBand;
-                    student.Region = dto.Region;
-                    student.ImdBand = dto.ImdBand;
-                    student.Disability = dto.Disability;
-                    student.StudiedCredits = dto.StudiedCredits;
-                    student.NumOfPrevAttempts = dto.NumOfPrevAttempts;
+                    if (dto.Gender != null) student.Gender = dto.Gender;
+                    if (dto.HighestEducation != null) student.HighestEducation = dto.HighestEducation;
+                    if (dto.AgeBand != null) student.AgeBand = dto.AgeBand;
+                    if (dto.Region != null) student.Region = dto.Region;
+                    if (dto.ImdBand != null) student.ImdBand = dto.ImdBand;
+                    if (dto.Disability != null) student.Disability = dto.Disability;
+                    if (dto.StudiedCredits.HasValue) student.StudiedCredits = dto.StudiedCredits;
+                    if (dto.NumOfPrevAttempts.HasValue) student.NumOfPrevAttempts = dto.NumOfPrevAttempts;
                 }
             }
 
