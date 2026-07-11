@@ -1,17 +1,12 @@
 import CourseCard from "@/Components/layout/CourseCard";
-import MainHeading from "@/Components/layout/MainHeading";
 import { courses } from "@/constants";
 import DashboardLayout from "@/mainLayout/DashboardLayout";
-import React from "react";
 
 const Courses = () => {
   return (
     <DashboardLayout>
       <div className="flex flex-col items-start lg:items-center justify-between sm:flex-row flex-wrap">
-        <MainHeading
-          title="Courses"
-          description="Here's an overview of your courses"
-        />
+
 
         <div className="flex flex-col lg:flex-row gap-4">
           <input
