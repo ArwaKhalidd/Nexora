@@ -23,12 +23,8 @@ namespace NexoraAPI.Services.Implementations
             if (user == null)
                 return null;
 
-            StudentInfo? student = null;
-            if (user.StudentId.HasValue)
-            {
-                student = await _context.StudentInfos
-                    .FirstOrDefaultAsync(s => s.IdStudent == user.StudentId.Value);
-            }
+            var profile = await _context.UserProfiles
+                .FirstOrDefaultAsync(p => p.UserId == userId);
 
             return new ProfileDto
             {
@@ -43,15 +39,15 @@ namespace NexoraAPI.Services.Implementations
                 LastLogin = user.LastLogin,
 
                 // Academic Details
-                Gender = student?.Gender,
-                HighestEducation = student?.HighestEducation,
-                AgeBand = student?.AgeBand,
-                Region = student?.Region,
-                ImdBand = student?.ImdBand,
-                Disability = student?.Disability,
-                StudiedCredits = student?.StudiedCredits,
-                NumOfPrevAttempts = student?.NumOfPrevAttempts,
-                FinalResult = student?.FinalResult
+                Gender = profile?.Gender,
+                HighestEducation = profile?.HighestEducation,
+                AgeBand = profile?.AgeBand,
+                Region = profile?.Region,
+                ImdBand = profile?.ImdBand,
+                Disability = profile?.Disability,
+                StudiedCredits = profile?.StudiedCredits,
+                NumOfPrevAttempts = profile?.NumOfPrevAttempts,
+                FinalResult = profile?.FinalResult
             };
         }
 
@@ -80,34 +76,26 @@ namespace NexoraAPI.Services.Implementations
                 user.Email = dto.Email;
             }
 
-            StudentInfo? student = null;
+            var profile = await _context.UserProfiles
+                .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            if (user.StudentId.HasValue)
+            if (profile == null)
             {
-                student = await _context.StudentInfos
-                    .FirstOrDefaultAsync(s => s.IdStudent == user.StudentId.Value);
-            }
-
-            if (student == null)
-            {
-                student = new StudentInfo
+                profile = new UserProfile
                 {
-                    IdStudent = user.Id
+                    UserId = userId
                 };
-
-                _context.StudentInfos.Add(student);
-
-                user.StudentId = student.IdStudent;
+                _context.UserProfiles.Add(profile);
             }
 
-            student.Gender = dto.Gender;
-            student.HighestEducation = dto.HighestEducation;
-            student.AgeBand = dto.AgeBand;
-            student.Region = dto.Region;
-            student.ImdBand = dto.ImdBand;
-            student.Disability = dto.Disability;
-            student.StudiedCredits = dto.StudiedCredits;
-            student.NumOfPrevAttempts = dto.NumOfPrevAttempts;
+            profile.Gender = dto.Gender;
+            profile.HighestEducation = dto.HighestEducation;
+            profile.AgeBand = dto.AgeBand;
+            profile.Region = dto.Region;
+            profile.ImdBand = dto.ImdBand;
+            profile.Disability = dto.Disability;
+            profile.StudiedCredits = dto.StudiedCredits;
+            profile.NumOfPrevAttempts = dto.NumOfPrevAttempts;
 
             await _context.SaveChangesAsync();
 
