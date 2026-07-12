@@ -58,50 +58,59 @@ namespace NexoraAPI.Services.Implementations
         public async Task<bool> UpdateProfileAsync(int userId, UpdateProfileDto dto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
             if (user == null)
                 return false;
 
-            // Update User fields if provided
-            if (dto.FirstName != null)
+            // Update User fields
+            if (!string.IsNullOrWhiteSpace(dto.FirstName))
                 user.FirstName = dto.FirstName;
 
-            if (dto.LastName != null)
+            if (!string.IsNullOrWhiteSpace(dto.LastName))
                 user.LastName = dto.LastName;
 
-            if (dto.Email != null)
+            if (!string.IsNullOrWhiteSpace(dto.Email))
             {
-                if (user.Email != dto.Email)
-                {
-                    // Check if new email is already taken
-                    var emailExists = await _context.Users.AnyAsync(u => u.Email == dto.Email && u.Id != userId);
-                    if (emailExists)
-                        return false;
+                var exists = await _context.Users.AnyAsync(x =>
+                    x.Email == dto.Email && x.Id != userId);
 
-                    user.Email = dto.Email;
-                    user.EmailVerified = false; // Reset verification if email changed
-                }
+                if (exists)
+                    return false;
+
+                user.Email = dto.Email;
             }
 
-            // Update StudentInfo fields if user has a StudentId
+            StudentInfo? student = null;
+
             if (user.StudentId.HasValue)
             {
-                var student = await _context.StudentInfos
+                student = await _context.StudentInfos
                     .FirstOrDefaultAsync(s => s.IdStudent == user.StudentId.Value);
-
-                if (student != null)
-                {
-                    if (dto.Gender != null) student.Gender = dto.Gender;
-                    if (dto.HighestEducation != null) student.HighestEducation = dto.HighestEducation;
-                    if (dto.AgeBand != null) student.AgeBand = dto.AgeBand;
-                    if (dto.Region != null) student.Region = dto.Region;
-                    if (dto.ImdBand != null) student.ImdBand = dto.ImdBand;
-                    if (dto.Disability != null) student.Disability = dto.Disability;
-                    if (dto.StudiedCredits.HasValue) student.StudiedCredits = dto.StudiedCredits;
-                    if (dto.NumOfPrevAttempts.HasValue) student.NumOfPrevAttempts = dto.NumOfPrevAttempts;
-                }
             }
 
+            if (student == null)
+            {
+                student = new StudentInfo
+                {
+                    IdStudent = user.Id
+                };
+
+                _context.StudentInfos.Add(student);
+
+                user.StudentId = student.IdStudent;
+            }
+
+            student.Gender = dto.Gender;
+            student.HighestEducation = dto.HighestEducation;
+            student.AgeBand = dto.AgeBand;
+            student.Region = dto.Region;
+            student.ImdBand = dto.ImdBand;
+            student.Disability = dto.Disability;
+            student.StudiedCredits = dto.StudiedCredits;
+            student.NumOfPrevAttempts = dto.NumOfPrevAttempts;
+
             await _context.SaveChangesAsync();
+
             return true;
         }
 
