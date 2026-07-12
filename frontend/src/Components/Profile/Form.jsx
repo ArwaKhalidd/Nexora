@@ -2,92 +2,85 @@ import { getCurrentUser, updateProfile } from "@/Services/user";
 import { useEffect, useState } from "react";
 
 export default function Form() {
-const [form, setForm] = useState({
-  firstName: "",
-  lastName: "",
-  email: "",
-  emailVerified: true,
-  role: "",
-  studentId: 0,
-  gender: "",
-  highestEducation: "",
-  region: "",
-  imdBand: "",
-  ageBand: "",
-  studiedCredits: 0,
-  numOfPrevAttempts: 0,
-  disability: "",
-});
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    emailVerified: true,
+    role: "",
+    studentId: 0,
+    gender: "",
+    highestEducation: "",
+    region: "",
+    imdBand: "",
+    ageBand: "",
+    studiedCredits: 0,
+    numOfPrevAttempts: 0,
+    disability: "",
+  });
 
-
-const handleGetInfo = async () => {
-  try {
-    const result = await getCurrentUser();
-    if (!result) {
-      return;
+  const handleGetInfo = async () => {
+    try {
+      const result = await getCurrentUser();
+      console.log("GET USER RESULT:", result.data);
+      if (!result) {
+        return;
+      }
+      const { data, success } = result;
+      if (success) {
+        setForm({
+          firstName: data.firstName ?? "",
+          lastName: data.lastName ?? "",
+          email: data.email ?? "",
+          emailVerified: data.emailVerified ?? true,
+          role: data.role ?? "",
+          studentId: data.studentId ?? 0,
+          gender: data.gender ?? "",
+          highestEducation: data.highestEducation ?? "",
+          region: data.region ?? "",
+          imdBand: data.imdBand ?? "",
+          ageBand: data.ageBand ?? "",
+          studiedCredits: data.studiedCredits ?? 0,
+          numOfPrevAttempts: data.numOfPrevAttempts ?? 0,
+          disability: data.disability ?? "",
+        });
+      }
+    } catch (error) {
+      console.log("GET USER ERROR:", error);
     }
-    const { data, success } = result;
-    if (success) {
-      setForm({
-        firstName: data.firstName ?? "",
-        lastName: data.lastName ?? "",
-        email: data.email ?? "",
-        emailVerified: data.emailVerified ?? true,
-        role: data.role ?? "",
-        studentId: data.studentId ?? 0,
-        gender: data.gender ?? "",
-        highestEducation: data.highestEducation ?? "",
-        region: data.region ?? "",
-        imdBand: data.imdBand ?? "",
-        ageBand: data.ageBand ?? "",
-        studiedCredits: data.studiedCredits ?? 0,
-        numOfPrevAttempts: data.numOfPrevAttempts ?? 0,
-        disability: data.disability ?? "",
-      });
-    }
-  } catch (error) {
-    console.log("GET USER ERROR:", error);
-  }
-};
-
-
-const handleUpdateProfile = async () => {
-
-  const profileData = {
-    firstName: form.firstName,
-    lastName: form.lastName,
-    email: form.email,
-    gender: form.gender.toLowerCase(),
-    highestEducation: form.highestEducation,
-    ageBand: String(form.ageBand),
-    region: form.region,
-    imdBand: String(form.imdBand),
-    studiedCredits: Number(form.studiedCredits),
-    numOfPrevAttempts: Number(form.numOfPrevAttempts),
-    disability: form.disability,
   };
 
+  const handleUpdateProfile = async () => {
+    const profileData = {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      gender: form.gender.toUpperCase(),
+      highestEducation: form.highestEducation,
+      ageBand: String(form.ageBand),
+      region: form.region,
+      imdBand: String(form.imdBand),
+      studiedCredits: Number(form.studiedCredits),
+      numOfPrevAttempts: Number(form.numOfPrevAttempts),
+      disability: form.disability,
+    };
 
-
-
-  try {
-    const result = await updateProfile(profileData);
-    if (result.success) {
-      await handleGetInfo();
-
-    } else {
-      console.log("UPDATE FAILED:", result.data);
+    try {
+      const result = await updateProfile(profileData);
+      console.log("UPDATE RESULT:", result.data);
+      if (result.success) {
+        await handleGetInfo();
+      } else {
+        console.log("UPDATE FAILED:", result.data);
+      }
+    } catch (error) {
+      console.log("UPDATE ERROR:", error);
     }
+  };
 
-  } catch (error) {
-    console.log("UPDATE ERROR:", error);
-  }
-};
-
-
-useEffect(() => {
-  handleGetInfo();
-}, []);
+  useEffect(() => {
+    handleGetInfo();
+  }, []);
 
   // Shared classes so every input/select lines up and matches width
   const fieldWrapClass = "flex flex-col gap-2 w-full";
