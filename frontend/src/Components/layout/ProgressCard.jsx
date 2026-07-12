@@ -13,7 +13,7 @@ function ProgressCard() {
   const [range, setRange] = useState("30d");
 
   return (
-    <div className="bg-linear-to-b from-sky-900 to-sky-600 w-sm h-auto flex flex-col items-center justify-start py-2 px-2.5 rounded-b-2xl rounded-bl-4xl rounded-tr-3xl">
+    <div className="bg-linear-to-b from-sky-900 to-sky-600 w-sm h-auto flex flex-col items-center justify-start py-2 px-2.5 rounded-b-2xl rounded-2xl">
       <div className=" flex items-center justify-between w-full">
         <h3 className="text-sky-50 font-bold text-2xl">Progress</h3>
         <select
@@ -32,8 +32,8 @@ function ProgressCard() {
           ))}
         </select>
       </div>
-      <div className="w-full p-1">
-        <div className="w-full">
+      <div className="w-full p-1 h-[30vh] items-center justify-center flex">
+        <div className="w-full h-full items-center justify-center flex">
           <WaterfallChart />
         </div>
       </div>
