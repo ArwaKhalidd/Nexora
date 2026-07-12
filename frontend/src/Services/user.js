@@ -7,7 +7,7 @@ export const getCurrentUser = async () => {
 
   try {
     // Get user profile
-    const response = await api.get("/api/AcademicProfile", {
+    const response = await api.get("/api/Profile", {
       headers: {
         Accept: "*/*",
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const getCurrentUser = async () => {
   } catch (error) {
     return {
       success: false,
-      data: error.response.data || error.message,
+      data: error.response?.data || error.message,
     };
   }
 };
@@ -30,11 +30,14 @@ export const getCurrentUser = async () => {
 export const updateProfile = async (profileData) => {
   const token = localStorage.getItem("token");
   if (!token) {
-    return;
+    return {
+      success: false,
+      data: "No token found",
+    };
   }
 
   try {
-    const response = await api.put("/api/AcademicProfile", profileData, {
+    const response = await api.put("/api/Profile", profileData, {
       headers: {
         Accept: "*/*",
         "Content-Type": "application/json",

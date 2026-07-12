@@ -2,71 +2,97 @@ import { getCurrentUser, updateProfile } from "@/Services/user";
 import { useEffect, useState } from "react";
 
 export default function Form() {
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    emailVerified: true,
-    role: "",
-    studentId: 0,
-    gender: "",
-    highestEducation: "",
-    region: "",
-    imdBand: 0,
-    ageBand: 0,
-    studiedCredits: 0,
-    numOfPrevAttempts: 0,
-    disability: "",
-    finalResult: "",
-  });
+const [form, setForm] = useState({
+  firstName: "",
+  lastName: "",
+  email: "",
+  emailVerified: true,
+  role: "",
+  studentId: 0,
+  gender: "",
+  highestEducation: "",
+  region: "",
+  imdBand: "",
+  ageBand: "",
+  studiedCredits: 0,
+  numOfPrevAttempts: 0,
+  disability: "",
+});
 
-  const handleGetInfo = async () => {
-    try {
-      const { data, success } = await getCurrentUser();
-      if (success) {
-        setForm((prev) => ({
-          ...prev,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          role: data.role,
-          studentId: data.studentId,
-          gender: data.gender,
-          highestEducation: data.highestEducation,
-          region: data.region,
-          imdBand: data.imdBand,
-          ageBand: data.ageBand,
-          studiedCredits: data.studiedCredits,
-          numOfPrevAttempts: data.numOfPrevAttempts,
-          disability: data.disability,
-          finalResult: data.finalResult,
-        }));
-      }
-    } catch (error) {
-      console.log(error);
+
+const handleGetInfo = async () => {
+  try {
+    const result = await getCurrentUser();
+    if (!result) {
+      return;
     }
+    const { data, success } = result;
+    if (success) {
+      setForm({
+        firstName: data.firstName ?? "",
+        lastName: data.lastName ?? "",
+        email: data.email ?? "",
+        emailVerified: data.emailVerified ?? true,
+        role: data.role ?? "",
+        studentId: data.studentId ?? 0,
+        gender: data.gender ?? "",
+        highestEducation: data.highestEducation ?? "",
+        region: data.region ?? "",
+        imdBand: data.imdBand ?? "",
+        ageBand: data.ageBand ?? "",
+        studiedCredits: data.studiedCredits ?? 0,
+        numOfPrevAttempts: data.numOfPrevAttempts ?? 0,
+        disability: data.disability ?? "",
+      });
+    }
+  } catch (error) {
+    console.log("GET USER ERROR:", error);
+  }
+};
+
+
+const handleUpdateProfile = async () => {
+
+  const profileData = {
+    firstName: form.firstName,
+    lastName: form.lastName,
+    email: form.email,
+    gender: form.gender.toLowerCase(),
+    highestEducation: form.highestEducation,
+    ageBand: String(form.ageBand),
+    region: form.region,
+    imdBand: String(form.imdBand),
+    studiedCredits: Number(form.studiedCredits),
+    numOfPrevAttempts: Number(form.numOfPrevAttempts),
+    disability: form.disability,
   };
 
-  const handleUpdateProfile = async () => {
-    try {
-      const { success } = await updateProfile(form);
-      if (success) {
-        await handleGetInfo();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  useEffect(() => {
-    handleGetInfo();
-  }, []);
+
+
+  try {
+    const result = await updateProfile(profileData);
+    if (result.success) {
+      await handleGetInfo();
+
+    } else {
+      console.log("UPDATE FAILED:", result.data);
+    }
+
+  } catch (error) {
+    console.log("UPDATE ERROR:", error);
+  }
+};
+
+
+useEffect(() => {
+  handleGetInfo();
+}, []);
 
   // Shared classes so every input/select lines up and matches width
   const fieldWrapClass = "flex flex-col gap-2 w-full";
   const labelClass = "text-xl text-sky-900";
-  const inputClass =
-    "w-full bg-sky-600/10 text-black p-2.5 rounded-md";
+  const inputClass = "w-full bg-sky-600/10 text-black p-2.5 rounded-md";
 
   return (
     <section className="mt-4 bg-white/90 shadow-2xl shadow-sky-900/10 rounded-3xl backdrop-blur p-6 pt-10 ">
@@ -134,13 +160,18 @@ export default function Form() {
               Gender
             </label>
             <select
-              value={form.gender || ""}
-              onChange={(e) => setForm({ ...form, gender: e.target.value })}
               id="gender"
-              className={`select ${inputClass}`}
+              value={form.gender || ""}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  gender: e.target.value,
+                }))
+              }
+              className={inputClass}
             >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
             </select>
           </div>
           <div className={fieldWrapClass}>
@@ -268,21 +299,6 @@ export default function Form() {
               value={form.disability || ""}
               onChange={(e) => setForm({ ...form, disability: e.target.value })}
               placeholder="Disability"
-              className={inputClass}
-            />
-          </div>
-          <div className={fieldWrapClass}>
-            <label htmlFor="finalResult" className={labelClass}>
-              Final Result
-            </label>
-            <input
-              id="finalResult"
-              type="text"
-              value={form.finalResult || ""}
-              onChange={(e) =>
-                setForm({ ...form, finalResult: e.target.value })
-              }
-              placeholder="Final Result"
               className={inputClass}
             />
           </div>
