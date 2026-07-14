@@ -319,7 +319,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Level).HasMaxLength(20).HasDefaultValue("Beginner");
 
             entity.HasOne(e => e.Course)
-                .WithMany()
+                .WithMany(c => c.CourseSkillTags)
                 .HasForeignKey(e => new { e.CodeModule, e.CodePresentation })
                 .OnDelete(DeleteBehavior.Cascade);
         });

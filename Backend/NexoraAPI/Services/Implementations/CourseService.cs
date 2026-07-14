@@ -15,13 +15,37 @@ namespace NexoraAPI.Services.implementations
 
         public async Task<IEnumerable<Course>> GetAllCoursesAsync()
         {
-            return await _context.Courses.ToListAsync();
+            var courses = await _context.Courses
+                .Include(c => c.Tutor)
+                .Include(c => c.CourseSkillTags)
+                .ToListAsync();
+
+            foreach (var course in courses)
+            {
+                if (course.Tutor != null)
+                    course.TutorName = $"{course.Tutor.FirstName} {course.Tutor.LastName}".Trim();
+
+                course.Skills = course.CourseSkillTags.Select(t => t.SkillName).ToList();
+            }
+            return courses;
         }
 
         public async Task<Course?> GetCourseByCodeAsync(string codeModule, string codePresentation)
         {
-            return await _context.Courses
+            var course = await _context.Courses
+                .Include(c => c.Tutor)
+                .Include(c => c.CourseSkillTags)
                 .FirstOrDefaultAsync(c => c.CodeModule == codeModule && c.CodePresentation == codePresentation);
+
+            if (course != null)
+            {
+                if (course.Tutor != null)
+                    course.TutorName = $"{course.Tutor.FirstName} {course.Tutor.LastName}".Trim();
+
+                course.Skills = course.CourseSkillTags.Select(t => t.SkillName).ToList();
+            }
+
+            return course;
         }
 
         public async Task<Course> AddCourseAsync(Course course)
@@ -31,12 +55,46 @@ namespace NexoraAPI.Services.implementations
             return course;
         }
 
-        public async Task<Course?> UpdateCourseAsync(string codeModule, string codePresentation, Course course)
+        public async Task<Course?> UpdateCourseAsync(string codeModule, string codePresentation, Course course, List<string>? skills = null)
         {
-            var existingCourse = await GetCourseByCodeAsync(codeModule, codePresentation);
+            var existingCourse = await _context.Courses
+                .Include(c => c.Tutor)
+                .Include(c => c.CourseSkillTags)
+                .FirstOrDefaultAsync(c => c.CodeModule == codeModule && c.CodePresentation == codePresentation);
+
             if (existingCourse == null) return null;
 
+            // Update editable fields
+            existingCourse.Name = course.Name;
+            existingCourse.Description = course.Description;
+            existingCourse.Hours = course.Hours;
+
+            // Sync skill tags if provided
+            if (skills != null)
+            {
+                // Remove old tags
+                _context.CourseSkillTags.RemoveRange(existingCourse.CourseSkillTags);
+
+                // Add new tags
+                foreach (var skill in skills.Where(s => !string.IsNullOrWhiteSpace(s)))
+                {
+                    _context.CourseSkillTags.Add(new CourseSkillTag
+                    {
+                        CodeModule = codeModule,
+                        CodePresentation = codePresentation,
+                        SkillName = skill.Trim()
+                    });
+                }
+            }
+
             await _context.SaveChangesAsync();
+
+            // Populate computed fields for response
+            if (existingCourse.Tutor != null)
+                existingCourse.TutorName = $"{existingCourse.Tutor.FirstName} {existingCourse.Tutor.LastName}".Trim();
+
+            existingCourse.Skills = existingCourse.CourseSkillTags.Select(t => t.SkillName).ToList();
+
             return existingCourse;
         }
 
@@ -52,7 +110,20 @@ namespace NexoraAPI.Services.implementations
 
         public async Task<IEnumerable<Course>> GetCoursesByTutorIdAsync(int tutorId)
         {
-            return await _context.Courses.Where(c => c.TutorId == tutorId).ToListAsync();
+            var courses = await _context.Courses
+                .Include(c => c.Tutor)
+                .Include(c => c.CourseSkillTags)
+                .Where(c => c.TutorId == tutorId)
+                .ToListAsync();
+
+            foreach (var course in courses)
+            {
+                if (course.Tutor != null)
+                    course.TutorName = $"{course.Tutor.FirstName} {course.Tutor.LastName}".Trim();
+
+                course.Skills = course.CourseSkillTags.Select(t => t.SkillName).ToList();
+            }
+            return courses;
         }
 
         public async Task<bool> EnrollStudentAsync(int studentId, string codeModule, string codePresentation)
