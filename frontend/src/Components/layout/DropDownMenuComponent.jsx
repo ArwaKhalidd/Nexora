@@ -3,47 +3,42 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/Components/UI/dropdown-menu";
-import { getCurrentUser } from "@/Services/user";
+
 import {
   EllipsisVertical,
   PencilIcon,
-  ShareIcon,
   TrashIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 
-const DropdownMenuComponent = () => {
-  const [user, setUser] = useState({});
-  useEffect(() => {
-    getCurrentUser().then((user) => {
-      if (res) {
-        setUser(user);
-      }
-    });
-  }, []);
+const DropdownMenuComponent = ({
+  course,
+  onEdit,
+  onDelete,
+}) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <EllipsisVertical className="text-white text-title cursor-pointer" />
+      <DropdownMenuTrigger asChild>
+        <button className="cursor-pointer">
+          <EllipsisVertical className="text-sky-900 text-title" />
+        </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+
+      <DropdownMenuContent align="end">
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <PencilIcon />
+          <DropdownMenuItem onClick={() => onEdit(course)} className={"cursor-pointer"}>
+            <PencilIcon className="mr-2 h-4 w-4 " />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ShareIcon />
-            Share
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem variant="destructive">
-            <TrashIcon />
+
+
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => onDelete(course)}
+            className={"cursor-pointer"}
+          >
+            <TrashIcon className="mr-2 h-4 w-4" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuGroup>

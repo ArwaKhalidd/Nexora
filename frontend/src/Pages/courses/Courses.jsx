@@ -7,6 +7,8 @@ import { getCurrentUser } from "@/Services/user";
 import { useState, useEffect } from "react";
 import AddCourseForm from "@/Components/layout/AddCourseForm";
 import { SuccessFlash, ErrorFlash } from "@/Components/UI/FlashMessages";
+import EditCourseForm from "@/Components/layout/EditCourseForm";
+import DeleteCourseCard from "@/Components/layout/DeleteCourseCard";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
@@ -14,11 +16,19 @@ const Courses = () => {
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [showDeleteCard, setShowDeleteCard] = useState(false);
   const [flash, setFlash] = useState({
     type: "",
     show: false,
     message: "",
   });
+
+  const handleEdit = (course) => {
+    setSelectedCourse(course);
+    setShowEditForm(true);
+  };
 
   const loadCourses = async () => {
     try {
@@ -28,10 +38,11 @@ const Courses = () => {
       console.log(data);
       setCourses(data);
     } catch (error) {
+      console.error(error);
       setFlash({
         show: true,
         type: "error",
-        message: "failed to get courses , try again later",
+        message: "failed to get courses , login first",
       });
     } finally {
       setLoading(false);
@@ -56,6 +67,12 @@ const Courses = () => {
     }
   };
 
+  // delete course
+  const handleDeleteClick = async (course) => {
+    setSelectedCourse(course);
+    setShowDeleteCard(true);
+  };
+
   // get the current user role
   useEffect(() => {
     loadCourses();
@@ -66,10 +83,19 @@ const Courses = () => {
     });
   }, []);
 
-  // use it when you open the page
   useEffect(() => {
-    loadCourses();
-  }, []);
+    if (!flash.show) return;
+
+    const timer = setTimeout(() => {
+      setFlash({
+        type: "",
+        show: false,
+        message: "",
+      });
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [flash.show]);
 
   if (loading) {
     return <Loader />;
@@ -118,12 +144,60 @@ const Courses = () => {
                     bg-white/40 shadow-2xl shadow-sky-900/10 backdrop-blur
                      full"
                   >
-                    <AddCourseForm  onSuccess={
-                      async () => {
+                    <AddCourseForm
+                      onSuccess={async () => {
                         setOpen(false);
                         await loadCourses();
-                      }
-                    } />
+                      }}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {showEditForm && (
+                  <motion.div
+                    initial={{ x: 400, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 400, opacity: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 250,
+                      damping: 25,
+                    }}
+                    className="fixed top-30 right-0 z-998 w-[60%] lg:w-[50%] rounded-lg bg-white/40 p-3 shadow-2xl shadow-sky-900/10 backdrop-blur"
+                  >
+                    <EditCourseForm
+                      course={selectedCourse}
+                      onSuccess={async () => {
+                        setShowEditForm(false);
+                        await loadCourses();
+                      }}
+                      onClose={() => setShowEditForm(false)}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {showDeleteCard && (
+                  <motion.div
+                    initial={{ x: 400, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 400, opacity: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 250,
+                      damping: 25,
+                    }}
+                    className="fixed top-30 right-0 z-998 w-[50%] lg:w-[50%] rounded-lg bg-transparent "
+                  >
+                    <DeleteCourseCard
+                      course={selectedCourse}
+                      onClose={() => setShowDeleteCard(false)}
+                      onSuccess={async () => {
+                        await loadCourses();
+                        setShowDeleteCard(false);
+                      }}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -179,6 +253,8 @@ const Courses = () => {
                   key={`${course.codeModule}-${course.codePresentation}`}
                   course={course}
                   onEnroll={handleEnroll}
+                  onEdit={handleEdit}
+                  onDelete={handleDeleteClick}
                 />
               ))}
             </div>

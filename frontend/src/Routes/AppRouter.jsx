@@ -15,14 +15,13 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/dashboard" element={<GlobalDashboard />} /> */}
         <Route path="/dashboard" element={<MyDashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/recommendations" element={<Recommendation />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
-
+        <Route path="/GlobalDashboard" element={<GlobalDashboard/>}/>
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>

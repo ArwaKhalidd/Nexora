@@ -1,22 +1,37 @@
 import { Link } from "react-router-dom";
 import DropdownMenuComponent from "./DropDownMenuComponent";
+import { useEffect, useState } from "react";
+import { getCurrentUser } from "@/Services/user";
 
-const CourseCard = ({ course, onEnroll }) => {
+const CourseCard = ({ course, onEnroll , onEdit , onDelete}) => {
+  const [user, setUser] = useState(null);
+
+  //get current user
+  useEffect(() => {
+    getCurrentUser().then((res) => {
+      if (res.success) {
+        setUser(res.data);
+      }
+    });
+  }, []);
+
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <div
+      className="overflow-hidden rounded-xl border h-auto min-h-[40vh] border-slate-200 
+    bg-linear-to-t from-sky-100 to-sky-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+    >
       {/* Header */}
-      <div className="flex items-start justify-between border-b border-slate-100 p-5">
+      <div className="flex items-start justify-between border-b border-sky-50 p-5">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">
-            {course.name}
-          </h2>
+          <h2 className="text-xl font-bold text-sky-900">{course.name}</h2>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-sky-800">
             {course.codeModule} • {course.codePresentation}
           </p>
         </div>
-
-        <DropdownMenuComponent />
+        {user?.role === "Tutor" && (
+          <DropdownMenuComponent course={course} onEdit={onEdit} onDelete={onDelete}/>
+        )}
       </div>
 
       {/* Description */}
@@ -53,9 +68,7 @@ const CourseCard = ({ course, onEnroll }) => {
         <div className="flex justify-between">
           <span className="text-slate-500">Hours</span>
 
-          <span className="font-medium">
-            {course.hours ?? 0} hrs
-          </span>
+          <span className="font-medium">{course.hours ?? 0} hrs</span>
         </div>
 
         <div className="flex justify-between">
@@ -68,7 +81,7 @@ const CourseCard = ({ course, onEnroll }) => {
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-3 p-5">
+      <div className="flex gap-3 p-5 ">
         <Link
           to={`/courses/${course.codeModule}/${course.codePresentation}`}
           className="flex-1 rounded-lg border border-slate-300 py-2 text-center transition hover:bg-slate-100"
@@ -77,9 +90,7 @@ const CourseCard = ({ course, onEnroll }) => {
         </Link>
 
         <button
-          onClick={() =>
-            onEnroll(course.codeModule, course.codePresentation)
-          }
+          onClick={() => onEnroll(course.codeModule, course.codePresentation)}
           className="flex-1 rounded-lg bg-sky-900 py-2 text-white transition hover:bg-sky-800"
         >
           Enroll
