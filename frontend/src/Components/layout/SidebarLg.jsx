@@ -25,6 +25,7 @@ const SidebarLg = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("chat_messages");
+      localStorage.removeItem("todos");
       navigate("/signin");
     }, 2000);
   };

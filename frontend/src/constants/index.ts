@@ -9,7 +9,7 @@ import {
 
 export const sidebarLinksForStudent = [
   {
-    path: "/dashboard",
+    path: "/GlobalDashboard",
     label: "Global Dashboard",
     icon: LayoutDashboard,
   },
