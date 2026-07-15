@@ -114,9 +114,16 @@ const Courses = () => {
                       stiffness: 250,
                       damping: 25,
                     }}
-                    className="fixed top-30 right-0 z-998  w-1/2  shadow-2xl full"
+                    className="fixed top-30 right-0 z-998 w-[60%] lg:w-[50%] rounded-lg p-3 
+                    bg-white/40 shadow-2xl shadow-sky-900/10 backdrop-blur
+                     full"
                   >
-                    <AddCourseForm />
+                    <AddCourseForm  onSuccess={
+                      async () => {
+                        setOpen(false);
+                        await loadCourses();
+                      }
+                    } />
                   </motion.div>
                 )}
               </AnimatePresence>

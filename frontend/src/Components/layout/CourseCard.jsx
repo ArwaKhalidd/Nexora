@@ -3,27 +3,61 @@ import DropdownMenuComponent from "./DropDownMenuComponent";
 
 const CourseCard = ({ course, onEnroll }) => {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-      <div className="flex justify-between items-start p-5">
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+      {/* Header */}
+      <div className="flex items-start justify-between border-b border-slate-100 p-5">
         <div>
-          <h2 className="text-xl justify-between items-start p-5">
-            {course.codeModule}
+          <h2 className="text-xl font-bold text-slate-900">
+            {course.name}
           </h2>
-          <p className="text-sm text-slate-500 mt-1">
-            Presentation: {course.codePresentation}
+
+          <p className="mt-1 text-sm text-slate-500">
+            {course.codeModule} • {course.codePresentation}
           </p>
         </div>
+
         <DropdownMenuComponent />
       </div>
-      <div className="px-5 space-y-3">
+
+      {/* Description */}
+      <div className="px-5 pt-4">
+        <p className="line-clamp-3 text-sm text-slate-600">
+          {course.description}
+        </p>
+      </div>
+
+      {/* Skills */}
+      <div className="flex flex-wrap gap-2 px-5 pt-4">
+        {course.skills?.map((skill) => (
+          <span
+            key={skill}
+            className="rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-800"
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      {/* Course Info */}
+      <div className="mt-5 space-y-3 px-5">
         <div className="flex justify-between">
-          <span className="text-slate-700">Tutor</span>
+          <span className="text-slate-500">Tutor</span>
+
           <span className="font-medium">
             {course.tutor
               ? `${course.tutor.firstName} ${course.tutor.lastName}`
-              : "unknown"}
+              : "Unknown"}
           </span>
         </div>
+
+        <div className="flex justify-between">
+          <span className="text-slate-500">Hours</span>
+
+          <span className="font-medium">
+            {course.hours ?? 0} hrs
+          </span>
+        </div>
+
         <div className="flex justify-between">
           <span className="text-slate-500">Students</span>
 
@@ -31,27 +65,22 @@ const CourseCard = ({ course, onEnroll }) => {
             {course.studentInfos?.length ?? 0}
           </span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-slate-500">Assessments</span>
-
-          <span className="font-medium">{course.assessments?.length ?? 0}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-slate-500">Activities</span>
-
-          <span className="font-medium">{course.vles?.length ?? 0}</span>
-        </div>
       </div>
+
+      {/* Buttons */}
       <div className="flex gap-3 p-5">
         <Link
-          to={`/api/courses/${course.codeModule}/${course.codePresentation}`}
-          className="flex-1 border border-slate-300 rounded-lg py-2 text-center hover:slate-100 transition"
+          to={`/courses/${course.codeModule}/${course.codePresentation}`}
+          className="flex-1 rounded-lg border border-slate-300 py-2 text-center transition hover:bg-slate-100"
         >
           Details
         </Link>
+
         <button
-          onClick={() => onEnroll(course.codeModule, course.codePresentation)}
-          className="flex-1 bg-primary text-white roudend-lg py-2 hover:opacity-90 transition"
+          onClick={() =>
+            onEnroll(course.codeModule, course.codePresentation)
+          }
+          className="flex-1 rounded-lg bg-sky-900 py-2 text-white transition hover:bg-sky-800"
         >
           Enroll
         </button>
@@ -59,4 +88,5 @@ const CourseCard = ({ course, onEnroll }) => {
     </div>
   );
 };
+
 export default CourseCard;
