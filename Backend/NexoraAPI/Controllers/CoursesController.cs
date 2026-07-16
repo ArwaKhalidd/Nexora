@@ -161,7 +161,7 @@ namespace NexoraAPI.Controllers
             var success = await _courseService.EnrollStudentAsync(userId.Value, codeModule, codePresentation);
             if (!success) return BadRequest("Could not enroll in course.");
 
-            return Ok(new { message = "Successfully enrolled." });
+            return Ok(new { enrolled = true });
         }
 
         [HttpPost("{codeModule}/{codePresentation}/unenroll")]
@@ -176,7 +176,7 @@ namespace NexoraAPI.Controllers
             var success = await _courseService.UnenrollStudentAsync(userId.Value, codeModule, codePresentation);
             if (!success) return BadRequest("Could not unenroll from course.");
 
-            return Ok(new { message = "Successfully unenrolled." });
+            return Ok(new { enrolled = false });
         }
 
         /// <summary>
