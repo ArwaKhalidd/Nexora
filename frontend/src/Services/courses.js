@@ -45,3 +45,9 @@ export const unEnroll = async (codeModule, codePresentation) => {
   );
   return response.data;
 };
+
+export const enrolled  = async () => {
+  const response  = await api.get(
+    "api/Courses/enrolled"  ); 
+    return response.data
+}

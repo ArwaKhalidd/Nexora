@@ -20,14 +20,19 @@ builder.Services.AddControllers();
 // Add SignalR
 builder.Services.AddSignalR();
 
-// CORS Configuration - Updated to AllowAll for smooth frontend integration
+// CORS Configuration - Allow the Vercel frontend with credentials (required for SignalR)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        policy.WithOrigins(
+                  "https://nexora-nine-pearl.vercel.app",
+                  "http://localhost:5173",
+                  "http://localhost:3000"
+              )
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 
@@ -133,8 +138,8 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-// Apply the updated CORS policy
-app.UseCors("AllowAll");
+// Apply CORS policy — must come before Authentication/Authorization
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
