@@ -48,6 +48,7 @@ const Courses = () => {
       setLoading(false);
     }
   };
+  
   const handleEnroll = async (codeModule, codePresentation) => {
     try {
       await enroll(codeModule, codePresentation);

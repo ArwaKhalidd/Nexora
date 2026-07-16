@@ -69,11 +69,6 @@ export const sidebarLinksForAdmin = [
     icon: BookOpen,
   },
   {
-    path: "/mycourses",
-    label: "My Courses",
-    icon: BookOpen,
-  },
-  {
     path: "/recommendations",
     label: "Recommendations",
     icon: Lightbulb,
