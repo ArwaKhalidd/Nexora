@@ -194,13 +194,12 @@ namespace NexoraAPI.Services.implementations
             });
         }
 
-        public async Task<User?> GetUserWithStudentIdAsync(int userId)
+        public async Task<int?> GetStudentIdForUserAsync(int userId)
         {
             return await _context.Users
-                .AsNoTracking()
                 .Where(u => u.Id == userId)
-                .Select(u => new User { Id = u.Id, StudentId = u.StudentId })
+                .Select(u => u.StudentId)
                 .FirstOrDefaultAsync();
         }
     }
-}
+}
