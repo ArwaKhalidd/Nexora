@@ -148,7 +148,7 @@
               "RelativeDocumentMoniker": "Data\\Migrations\\20260717134435_enrolledcount.cs",
               "ToolTip": "D:\\Nexora\\Backend\\NexoraAPI\\Data\\Migrations\\20260717134435_enrolledcount.cs",
               "RelativeToolTip": "Data\\Migrations\\20260717134435_enrolledcount.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-17T13:44:35.72Z",
               "EditorCaption": ""
@@ -187,8 +187,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-07-11T23:24:49.887Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-11T23:24:49.887Z"
             },
             {
               "$type": "Document",
