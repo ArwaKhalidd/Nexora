@@ -80,6 +80,7 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ICourseSkillTagService, CourseSkillTagService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 // Background Service for auto-notifications (runs every 24h)
 builder.Services.AddHostedService<NotificationBackgroundService>();
