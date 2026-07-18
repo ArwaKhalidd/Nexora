@@ -244,7 +244,7 @@ namespace NexoraAPI.Services.implementations
                 await _notificationService.SendNotificationAsync(
                     userId: course.TutorId.Value,
                     title: "🎓 New Student Enrolled!",
-                    message: $"{studentName} has just enrolled in your course \"{ courseName}\".",
+                    message: $"{studentName} has just enrolled in your course \"{courseName}\".",
                     type: "Enrollment"
                 );
             }
