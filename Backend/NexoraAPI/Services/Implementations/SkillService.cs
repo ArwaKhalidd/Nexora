@@ -8,10 +8,12 @@ namespace NexoraAPI.Services.Implementations;
 public class SkillService : ISkillService
 {
     private readonly AppDbContext _context;
+    private readonly INotificationService _notificationService;
 
-    public SkillService(AppDbContext context)
+    public SkillService(AppDbContext context, INotificationService notificationService)
     {
         _context = context;
+        _notificationService = notificationService;
     }
 
     public async Task<List<StudentSkillDto>> GetSkillsAsync(int userId)
@@ -37,6 +39,9 @@ public class SkillService : ISkillService
                            s.SkillName.ToLower() == dto.SkillName.ToLower());
         if (exists) return null;
 
+        // Check if this is the user's first skill
+        bool isFirstSkill = !await _context.StudentSkills.AnyAsync(s => s.UserId == userId);
+
         var skill = new StudentSkill
         {
             UserId = userId,
@@ -47,6 +52,17 @@ public class SkillService : ISkillService
 
         _context.StudentSkills.Add(skill);
         await _context.SaveChangesAsync();
+
+        // --- Motivational notification on the user's very first skill ---
+        if (isFirstSkill)
+        {
+            await _notificationService.SendNotificationAsync(
+                userId: userId,
+                title: "💪 You started your skill journey!",
+                message: $"Great start! You added \"{skill.SkillName}\" as your first skill. Keep building your profile to get better course recommendations.",
+                type: "SkillMilestone"
+            );
+        }
 
         return new StudentSkillDto
         {
@@ -64,10 +80,24 @@ public class SkillService : ISkillService
 
         if (skill == null) return false;
 
+        bool leveledUpToAdvanced = skill.TargetLevel != "Advanced" && dto.TargetLevel == "Advanced";
+
         skill.SkillName = dto.SkillName.Trim();
         skill.TargetLevel = dto.TargetLevel;
 
         await _context.SaveChangesAsync();
+
+        // --- Celebrate reaching Advanced level ---
+        if (leveledUpToAdvanced)
+        {
+            await _notificationService.SendNotificationAsync(
+                userId: userId,
+                title: "🏆 Advanced Level Unlocked!",
+                message: $"You set \"{skill.SkillName}\" to Advanced. Amazing progress — you're on your way to mastery!",
+                type: "SkillMilestone"
+            );
+        }
+
         return true;
     }
 

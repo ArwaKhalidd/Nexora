@@ -12,10 +12,12 @@ namespace NexoraAPI.Services.Implementations
     public class ReportService : IReportService
     {
         private readonly AppDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public ReportService(AppDbContext context)
+        public ReportService(AppDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<IEnumerable<EnrolledCourseWithReportDto>> GetEnrolledCoursesWithReportsAsync(int studentId)
@@ -91,7 +93,7 @@ namespace NexoraAPI.Services.Implementations
             return await ProjectReportsAsync(reports);
         }
 
-        public async Task<(bool Success, string? Error)> SubmitOrUpdateReportAsync(int studentId, SubmitReportDto dto)
+        public async Task<(bool Success, string? Error)> SubmitOrUpdateReportAsync(int userId, int studentId, SubmitReportDto dto)
         {
             // Validate enrollment
             var isEnrolled = await _context.StudentInfos.AnyAsync(s =>
@@ -108,6 +110,8 @@ namespace NexoraAPI.Services.Implementations
                 r.StudentId == studentId &&
                 r.CodeModule == dto.CodeModule &&
                 r.CodePresentation == dto.CodePresentation);
+
+            bool isNew = existingReport == null;
 
             if (existingReport != null)
             {
@@ -131,6 +135,35 @@ namespace NexoraAPI.Services.Implementations
             }
 
             await _context.SaveChangesAsync();
+
+            // --- Notify the tutor when a NEW review is submitted ---
+            if (isNew)
+            {
+                var course = await _context.Courses
+                    .FirstOrDefaultAsync(c => c.CodeModule == dto.CodeModule && c.CodePresentation == dto.CodePresentation);
+
+                if (course?.TutorId.HasValue == true)
+                {
+                    var student = await _context.Users.FindAsync(userId);
+                    var studentName = student != null
+                        ? $"{student.FirstName} {student.LastName}".Trim()
+                        : $"Student #{studentId}";
+
+                    var courseName = string.IsNullOrWhiteSpace(course.Name)
+                        ? $"{dto.CodeModule} ({dto.CodePresentation})"
+                        : course.Name;
+
+                    var stars = new string('⭐', dto.Rating);
+
+                    await _notificationService.SendNotificationAsync(
+                        userId: course.TutorId.Value,
+                        title: "📝 New Course Review!",
+                        message: $"{studentName} left a {stars} review on \"{courseName}\": \"{dto.Comment?.Trim()}\"",
+                        type: "CourseReview"
+                    );
+                }
+            }
+
             return (true, null);
         }
 

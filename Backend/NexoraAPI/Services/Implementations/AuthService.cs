@@ -11,11 +11,13 @@ namespace NexoraAPI.Services.Implementations
     {
         private readonly AppDbContext _context;
         private readonly IJwtService _jwtService;
+        private readonly INotificationService _notificationService;
 
-        public AuthService(AppDbContext context, IJwtService jwtService)
+        public AuthService(AppDbContext context, IJwtService jwtService, INotificationService notificationService)
         {
             _context = context;
             _jwtService = jwtService;
+            _notificationService = notificationService;
         }
 
         public async Task<(bool Success, string? Error)> RegisterAsync(RegisterDto dto)
@@ -94,6 +96,21 @@ namespace NexoraAPI.Services.Implementations
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
+            // --- Send a welcome notification right after account creation ---
+            var firstName = user.FirstName;
+            var (welcomeTitle, welcomeMsg) = user.Role == UserRole.Student
+                ? ("🎉 Welcome to Nexora, " + firstName + "!",
+                   "Your account is ready. Start exploring courses, track your skills, and reach your learning goals!")
+                : ("👋 Welcome aboard, " + firstName + "!",
+                   "Your tutor account is live. Create your first course and start inspiring students today!");
+
+            await _notificationService.SendNotificationAsync(
+                userId: user.Id,
+                title: welcomeTitle,
+                message: welcomeMsg,
+                type: "Welcome"
+            );
 
             return (true, null);
         }

@@ -9,6 +9,6 @@ namespace NexoraAPI.Services.Interfaces
         Task<IEnumerable<EnrolledCourseWithReportDto>> GetEnrolledCoursesWithReportsAsync(int studentId);
         Task<IEnumerable<CourseReportResponseDto>> GetReportsForTutorAsync(int tutorId);
         Task<IEnumerable<CourseReportResponseDto>> GetAllReportsAsync();
-        Task<(bool Success, string? Error)> SubmitOrUpdateReportAsync(int studentId, SubmitReportDto dto);
+        Task<(bool Success, string? Error)> SubmitOrUpdateReportAsync(int userId, int studentId, SubmitReportDto dto);
     }
 }

@@ -9,10 +9,12 @@ namespace NexoraAPI.Services.Implementations
     public class ProfileService : IProfileService
     {
         private readonly AppDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public ProfileService(AppDbContext context)
+        public ProfileService(AppDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<ProfileDto?> GetProfileAsync(int userId)
@@ -99,6 +101,14 @@ namespace NexoraAPI.Services.Implementations
 
             await _context.SaveChangesAsync();
 
+            // --- Confirm the profile update to the user ---
+            await _notificationService.SendNotificationAsync(
+                userId: userId,
+                title: "✅ Profile Updated",
+                message: "Your profile information has been successfully updated.",
+                type: "ProfileUpdated"
+            );
+
             return true;
         }
 
@@ -118,6 +128,14 @@ namespace NexoraAPI.Services.Implementations
 
             user.PasswordHash = PasswordHasher.Hash(dto.NewPassword);
             await _context.SaveChangesAsync();
+
+            // --- Security alert: notify the user their password was changed ---
+            await _notificationService.SendNotificationAsync(
+                userId: userId,
+                title: "🔒 Password Changed",
+                message: "Your account password was just changed. If you did not do this, please contact support immediately.",
+                type: "SecurityAlert"
+            );
 
             return true;
         }

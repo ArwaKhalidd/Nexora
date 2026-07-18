@@ -157,7 +157,7 @@ namespace NexoraAPI.Controllers
             // Resolve the correct StudentId
             var studentId = await _courseService.GetStudentIdForUserAsync(userId.Value) ?? userId.Value;
 
-            var success = await _courseService.EnrollStudentAsync(studentId, codeModule, codePresentation);
+            var success = await _courseService.EnrollStudentAsync(userId.Value, studentId, codeModule, codePresentation);
             if (!success) return BadRequest("Could not enroll in course.");
 
             return Ok(new { enrolled = true });
@@ -175,7 +175,7 @@ namespace NexoraAPI.Controllers
             // Resolve the correct StudentId
             var studentId = await _courseService.GetStudentIdForUserAsync(userId.Value) ?? userId.Value;
 
-            var success = await _courseService.UnenrollStudentAsync(studentId, codeModule, codePresentation);
+            var success = await _courseService.UnenrollStudentAsync(userId.Value, studentId, codeModule, codePresentation);
             if (!success) return BadRequest("Could not unenroll from course.");
 
             return Ok(new { enrolled = false });

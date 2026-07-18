@@ -84,7 +84,7 @@ namespace NexoraAPI.Controllers
 
             var studentId = await GetStudentIdForUserAsync(userId.Value) ?? userId.Value;
 
-            var (success, error) = await _reportService.SubmitOrUpdateReportAsync(studentId, dto);
+            var (success, error) = await _reportService.SubmitOrUpdateReportAsync(userId.Value, studentId, dto);
             if (!success)
             {
                 return BadRequest(new { message = error });

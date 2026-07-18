@@ -11,8 +11,8 @@ namespace NexoraAPI.Services.Interfaces
         Task<Course?> UpdateCourseAsync(string codeModule, string codePresentation, Course course, List<string>? skills = null);
         Task<bool> DeleteCourseAsync(string codeModule, string codePresentation);
         Task<IEnumerable<Course>> GetCoursesByTutorIdAsync(int tutorId);
-        Task<bool> EnrollStudentAsync(int studentId, string codeModule, string codePresentation);
-        Task<bool> UnenrollStudentAsync(int studentId, string codeModule, string codePresentation);
+        Task<bool> EnrollStudentAsync(int userId, int studentId, string codeModule, string codePresentation);
+        Task<bool> UnenrollStudentAsync(int userId, int studentId, string codeModule, string codePresentation);
         Task<IEnumerable<EnrolledCourseDto>> GetEnrolledCoursesAsync(int studentId);
         Task<int?> GetStudentIdForUserAsync(int userId);
     }

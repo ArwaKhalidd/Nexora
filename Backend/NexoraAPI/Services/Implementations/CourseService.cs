@@ -8,10 +8,12 @@ namespace NexoraAPI.Services.implementations
     public class CourseService : ICourseService
     {
         private readonly AppDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public CourseService(AppDbContext context)
+        public CourseService(AppDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<IEnumerable<Course>> GetAllCoursesAsync()
@@ -65,9 +67,15 @@ namespace NexoraAPI.Services.implementations
             var existingCourse = await _context.Courses
                 .Include(c => c.Tutor)
                 .Include(c => c.CourseSkillTags)
+                .Include(c => c.StudentInfos)
                 .FirstOrDefaultAsync(c => c.CodeModule == codeModule && c.CodePresentation == codePresentation);
 
             if (existingCourse == null) return null;
+
+            // Capture enrolled student IDs before making changes
+            var enrolledStudentIds = existingCourse.StudentInfos
+                .Select(si => si.IdStudent)
+                .ToList();
 
             // Update editable fields
             existingCourse.Name = course.Name;
@@ -100,13 +108,73 @@ namespace NexoraAPI.Services.implementations
 
             existingCourse.Skills = existingCourse.CourseSkillTags.Select(t => t.SkillName).ToList();
 
+            // --- Notify enrolled students that the course was updated ---
+            if (enrolledStudentIds.Any())
+            {
+                // Resolve User.Id for each enrolled student (StudentInfo uses dataset StudentId)
+                var userIds = await _context.Users
+                    .Where(u => u.StudentId.HasValue && enrolledStudentIds.Contains(u.StudentId.Value))
+                    .Select(u => u.Id)
+                    .ToListAsync();
+
+                var tutorName = existingCourse.Tutor != null
+                    ? $"{existingCourse.Tutor.FirstName} {existingCourse.Tutor.LastName}".Trim()
+                    : "Your tutor";
+
+                var updatedCourseName = string.IsNullOrWhiteSpace(existingCourse.Name)
+                    ? $"{codeModule} ({codePresentation})"
+                    : existingCourse.Name;
+
+                foreach (var uid in userIds)
+                {
+                    await _notificationService.SendNotificationAsync(
+                        userId: uid,
+                        title: "📚 Course Updated!",
+                        message: $"The course \"{updatedCourseName}\" has been updated by {tutorName}. Check it out for the latest changes.",
+                        type: "CourseUpdated"
+                    );
+                }
+            }
+
             return existingCourse;
         }
 
         public async Task<bool> DeleteCourseAsync(string codeModule, string codePresentation)
         {
-            var course = await GetCourseByCodeAsync(codeModule, codePresentation);
+            var course = await _context.Courses
+                .Include(c => c.Tutor)
+                .Include(c => c.StudentInfos)
+                .FirstOrDefaultAsync(c => c.CodeModule == codeModule && c.CodePresentation == codePresentation);
+
             if (course == null) return false;
+
+            // --- Notify enrolled students BEFORE deleting ---
+            var enrolledStudentIds = course.StudentInfos.Select(si => si.IdStudent).ToList();
+            if (enrolledStudentIds.Any())
+            {
+                var userIds = await _context.Users
+                    .Where(u => u.StudentId.HasValue && enrolledStudentIds.Contains(u.StudentId.Value))
+                    .Select(u => u.Id)
+                    .ToListAsync();
+
+                var tutorName = course.Tutor != null
+                    ? $"{course.Tutor.FirstName} {course.Tutor.LastName}".Trim()
+                    : "Your tutor";
+
+                var deletedCourseName = string.IsNullOrWhiteSpace(course.Name)
+                    ? $"{codeModule} ({codePresentation})"
+                    : course.Name;
+
+                foreach (var uid in userIds)
+                {
+                    await _notificationService.SendNotificationAsync(
+                        userId: uid,
+                        title: "⚠️ Course Removed",
+                        message: $"The course \"{deletedCourseName}\" by {tutorName} has been removed. Please explore other available courses.",
+                        type: "CourseDeleted"
+                    );
+                }
+            }
 
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
@@ -133,7 +201,7 @@ namespace NexoraAPI.Services.implementations
             return courses;
         }
 
-        public async Task<bool> EnrollStudentAsync(int studentId, string codeModule, string codePresentation)
+        public async Task<bool> EnrollStudentAsync(int userId, int studentId, string codeModule, string codePresentation)
         {
             var course = await GetCourseByCodeAsync(codeModule, codePresentation);
             if (course == null) return false;
@@ -160,10 +228,31 @@ namespace NexoraAPI.Services.implementations
             course.EnrolledCount = await _context.StudentInfos
                 .CountAsync(si => si.CodeModule == codeModule && si.CodePresentation == codePresentation);
 
+            // --- Notify the tutor (if the course has one) ---
+            if (course.TutorId.HasValue)
+            {
+                // Resolve student's display name from their User account
+                var student = await _context.Users.FindAsync(userId);
+                var studentName = student != null
+                    ? $"{student.FirstName} {student.LastName}".Trim()
+                    : $"Student #{studentId}";
+
+                var courseName = string.IsNullOrWhiteSpace(course.Name)
+                    ? $"{codeModule} ({codePresentation})"
+                    : course.Name;
+
+                await _notificationService.SendNotificationAsync(
+                    userId: course.TutorId.Value,
+                    title: "🎓 New Student Enrolled!",
+                    message: $"{studentName} has just enrolled in your course \"{ courseName}\".",
+                    type: "Enrollment"
+                );
+            }
+
             return true;
         }
 
-        public async Task<bool> UnenrollStudentAsync(int studentId, string codeModule, string codePresentation)
+        public async Task<bool> UnenrollStudentAsync(int userId, int studentId, string codeModule, string codePresentation)
         {
             var info = await _context.StudentInfos
                 .FirstOrDefaultAsync(si => si.IdStudent == studentId
