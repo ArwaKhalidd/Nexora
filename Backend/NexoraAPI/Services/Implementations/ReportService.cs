@@ -177,14 +177,16 @@ namespace NexoraAPI.Services.Implementations
             // Get unique student IDs to query student names from Users
             var studentIds = reports.Select(r => r.StudentId).Distinct().ToList();
             var users = await _context.Users
-                .Where(u => u.StudentId.HasValue && studentIds.Contains(u.StudentId.Value))
+                .Where(u => studentIds.Contains(u.Id) || (u.StudentId.HasValue && studentIds.Contains(u.StudentId.Value)))
                 .ToListAsync();
 
             var result = new List<CourseReportResponseDto>();
 
             foreach (var r in reports)
             {
-                var studentUser = users.FirstOrDefault(u => u.StudentId == r.StudentId);
+                var studentUser = users.FirstOrDefault(u =>
+                    (u.StudentId.HasValue && u.StudentId.Value == r.StudentId) ||
+                    (!u.StudentId.HasValue && u.Id == r.StudentId));
                 var studentName = studentUser != null
                     ? $"{studentUser.FirstName} {studentUser.LastName}".Trim()
                     : $"Student #{r.StudentId}";

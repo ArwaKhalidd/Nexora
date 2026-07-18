@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NexoraAPI.DTOs;
 using NexoraAPI.Models;
@@ -71,13 +71,10 @@ namespace NexoraAPI.Controllers
                 }
 
                 // 4. جلب تفاعل الطالب في الـ VLE لحساب ساعات المذاكرة
-                List<StudentVle> studentVleActivity = new();
-                if (user.StudentId.HasValue)
-                {
-                    studentVleActivity = await _context.StudentVles
-                        .Where(v => v.IdStudent == user.StudentId.Value) // الفلترة بالـ StudentId الحقيقي
-                        .ToListAsync();
-                }
+                var studentId = user.StudentId ?? user.Id;
+                var studentVleActivity = await _context.StudentVles
+                    .Where(v => v.IdStudent == studentId) // الفلترة بالـ StudentId الحقيقي أو الـ fallback
+                    .ToListAsync();
 
                 // 5. تجهيز بيانات الـ Line Chart
                 List<MonthlyProgressDto> monthlyProgress;

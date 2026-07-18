@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NexoraAPI.Enums;
 using NexoraAPI.Models;
 using NexoraAPI.Services.Interfaces;
 
@@ -53,9 +54,9 @@ public class NotificationBackgroundService : BackgroundService
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var notifService = scope.ServiceProvider.GetRequiredService<INotificationService>();
 
-        // Get all users who are students and have a linked StudentId
+        // Get all users who are students
         var students = await context.Users
-            .Where(u => u.StudentId.HasValue)
+            .Where(u => u.Role == UserRole.Student)
             .ToListAsync();
 
         // Today represented as days since the OULAD epoch (day 0 = course start)
@@ -88,9 +89,11 @@ public class NotificationBackgroundService : BackgroundService
         int sevenDaysAgo,
         int maxDate)
     {
+        var studentId = user.StudentId ?? user.Id;
+
         // Get modules the student is enrolled in
         var modules = await context.StudentInfos
-            .Where(si => si.IdStudent == user.StudentId!.Value)
+            .Where(si => si.IdStudent == studentId)
             .Select(si => si.CodeModule)
             .Distinct()
             .ToListAsync();
@@ -100,7 +103,7 @@ public class NotificationBackgroundService : BackgroundService
             // Check if any clicks exist in the last 7 days for this module
             bool hasActivity = await context.StudentVles
                 .AnyAsync(sv =>
-                    sv.IdStudent == user.StudentId!.Value &&
+                    sv.IdStudent == studentId &&
                     sv.CodeModule == module &&
                     sv.Date >= sevenDaysAgo &&
                     sv.Date <= maxDate &&
@@ -138,8 +141,10 @@ public class NotificationBackgroundService : BackgroundService
         User user,
         int sevenDaysAgo)
     {
+        var studentId = user.StudentId ?? user.Id;
+
         var scores = await context.StudentAssessments
-            .Where(sa => sa.IdStudent == user.StudentId!.Value && sa.Score.HasValue)
+            .Where(sa => sa.IdStudent == studentId && sa.Score.HasValue)
             .Select(sa => new { sa.DateSubmitted, sa.Score })
             .ToListAsync();
 

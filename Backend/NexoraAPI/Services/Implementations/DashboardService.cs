@@ -20,28 +20,25 @@ public class DashboardService : IDashboardService
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) return null;
 
-        var studentId = user.StudentId;
+        var studentId = user.StudentId ?? user.Id;
 
         // ─── Course Stats ────────────────────────────────────────────────────────
         int totalCourses = 0;
         int completedCourses = 0;
         HashSet<string> enrolledModules = new();   // to exclude from recommendations
 
-        if (studentId.HasValue)
-        {
-            var allRegistrations = await _context.StudentInfos
-                .Where(s => s.IdStudent == studentId.Value)
-                .ToListAsync();
+        var allRegistrations = await _context.StudentInfos
+            .Where(s => s.IdStudent == studentId)
+            .ToListAsync();
 
-            totalCourses = allRegistrations.Count;
-            completedCourses = allRegistrations
-                .Count(s => !string.IsNullOrEmpty(s.FinalResult)
-                            && s.FinalResult != "Withdrawn");
+        totalCourses = allRegistrations.Count;
+        completedCourses = allRegistrations
+            .Count(s => !string.IsNullOrEmpty(s.FinalResult)
+                        && s.FinalResult != "Withdrawn");
 
-            // Track enrolled modules for exclusion in recommendations
-            foreach (var reg in allRegistrations)
-                enrolledModules.Add($"{reg.CodeModule}|{reg.CodePresentation}");
-        }
+        // Track enrolled modules for exclusion in recommendations
+        foreach (var reg in allRegistrations)
+            enrolledModules.Add($"{reg.CodeModule}|{reg.CodePresentation}");
 
         int currentCourses = totalCourses - completedCourses;
         double completionPercentage = totalCourses > 0
@@ -50,17 +47,14 @@ public class DashboardService : IDashboardService
 
         // ─── GPA (average assessment score %) ────────────────────────────────────
         double currentGpa = 0;
-        if (studentId.HasValue)
-        {
-            var scores = await _context.StudentAssessments
-                .Where(sa => sa.IdStudent == studentId.Value && sa.Score.HasValue)
-                .Select(sa => sa.Score!.Value)
-                .ToListAsync();
+        var scores = await _context.StudentAssessments
+            .Where(sa => sa.IdStudent == studentId && sa.Score.HasValue)
+            .Select(sa => sa.Score!.Value)
+            .ToListAsync();
 
-            currentGpa = scores.Count > 0
-                ? Math.Round(scores.Average() / 25.0, 2)  // Convert 0-100 → 0-4.0 scale
-                : 0;
-        }
+        currentGpa = scores.Count > 0
+            ? Math.Round(scores.Average() / 25.0, 2)  // Convert 0-100 → 0-4.0 scale
+            : 0;
 
         // ─── Unread Notifications ─────────────────────────────────────────────────
         int unreadCount = await _context.Notifications
@@ -87,12 +81,12 @@ public class DashboardService : IDashboardService
 
             // Build the VLE engagement lookup for this student
             HashSet<string> engagedCourses = new();
-            if (studentId.HasValue && recommendedTags.Any())
+            if (recommendedTags.Any())
             {
                 var moduleCodes = recommendedTags.Select(t => t.CodeModule).Distinct().ToList();
 
                 var vleActivity = await _context.StudentVles
-                    .Where(sv => sv.IdStudent == studentId.Value
+                    .Where(sv => sv.IdStudent == studentId
                                  && sv.SumClick > 0
                                  && moduleCodes.Contains(sv.CodeModule!))
                     .Select(sv => $"{sv.CodeModule}|{sv.CodePresentation}")

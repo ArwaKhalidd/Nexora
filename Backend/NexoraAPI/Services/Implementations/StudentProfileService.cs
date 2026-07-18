@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NexoraAPI.DTOs;
 using NexoraAPI.Models;
 
@@ -23,11 +23,13 @@ namespace NexoraAPI.Services
         {
             var user = await GetStudentBasicInfo(studentId);
 
-            if (user == null || user.StudentId == null)
+            if (user == null)
                 return 0;
 
+            var resolvedStudentId = user.StudentId ?? user.Id;
+
             return await _context.StudentAssessments
-                .Where(sa => sa.IdStudent == user.StudentId)
+                .Where(sa => sa.IdStudent == resolvedStudentId && sa.Score.HasValue)
                 .AverageAsync(sa => (double?)sa.Score) ?? 0;
         }
 
@@ -43,17 +45,21 @@ namespace NexoraAPI.Services
         {
             var user = await GetStudentBasicInfo(studentId);
 
-            if (user == null || user.StudentId == null)
+            if (user == null)
                 return new List<string>();
 
+            var resolvedStudentId = user.StudentId ?? user.Id;
+
             return await _context.StudentAssessments
-                .Where(sa => sa.IdStudent == user.StudentId && sa.Score < 60)
+                .Where(sa => sa.IdStudent == resolvedStudentId && sa.Score < 60)
                 .Join(
                     _context.Assessments,
                     sa => sa.IdAssessment,
                     a => a.IdAssessment,
                     (sa, a) => a.CodeModule
                 )
+                .Where(codeModule => codeModule != null)
+                .Select(codeModule => codeModule!)
                 .Distinct()
                 .ToListAsync();
         }
@@ -103,10 +109,11 @@ namespace NexoraAPI.Services
 
             bool hasAssessments = false;
 
-            if (user?.StudentId != null)
+            if (user != null)
             {
+                var resolvedStudentId = user.StudentId ?? user.Id;
                 hasAssessments = await _context.StudentAssessments
-                    .AnyAsync(sa => sa.IdStudent == user.StudentId);
+                    .AnyAsync(sa => sa.IdStudent == resolvedStudentId);
             }
 
             var response = new RecommendationDashboardResponse
