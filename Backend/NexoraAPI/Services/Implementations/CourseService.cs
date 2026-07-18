@@ -111,9 +111,10 @@ namespace NexoraAPI.Services.implementations
             // --- Notify enrolled students that the course was updated ---
             if (enrolledStudentIds.Any())
             {
-                // Resolve User.Id for each enrolled student (StudentInfo uses dataset StudentId)
+                // Resolve User.Id for each enrolled student (StudentInfo uses dataset StudentId or falls back to User.Id)
                 var userIds = await _context.Users
-                    .Where(u => u.StudentId.HasValue && enrolledStudentIds.Contains(u.StudentId.Value))
+                    .Where(u => (u.StudentId.HasValue && enrolledStudentIds.Contains(u.StudentId.Value))
+                             || enrolledStudentIds.Contains(u.Id))
                     .Select(u => u.Id)
                     .ToListAsync();
 
@@ -153,7 +154,8 @@ namespace NexoraAPI.Services.implementations
             if (enrolledStudentIds.Any())
             {
                 var userIds = await _context.Users
-                    .Where(u => u.StudentId.HasValue && enrolledStudentIds.Contains(u.StudentId.Value))
+                    .Where(u => (u.StudentId.HasValue && enrolledStudentIds.Contains(u.StudentId.Value))
+                             || enrolledStudentIds.Contains(u.Id))
                     .Select(u => u.Id)
                     .ToListAsync();
 

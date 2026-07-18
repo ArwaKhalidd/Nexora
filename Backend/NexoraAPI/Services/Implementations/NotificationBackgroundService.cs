@@ -31,7 +31,7 @@ public class NotificationBackgroundService : BackgroundService
         _logger.LogInformation("NotificationBackgroundService started.");
 
         // Wait a short delay before the first run so the app can fully start up
-        await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+        await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
