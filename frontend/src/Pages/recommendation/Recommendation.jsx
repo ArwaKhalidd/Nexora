@@ -2,10 +2,11 @@ import ChatPage from "@/Components/ChatBot/ChatPage";
 import CourseCard from "@/Components/layout/CourseCard";
 import Loader from "@/Components/Loader/Loader";
 import DashboardLayout from "@/mainLayout/DashboardLayout";
-import { getCourses, enroll } from "@/Services/courses";
+import { enroll } from "@/Services/courses";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { SuccessFlash, ErrorFlash } from "@/Components/UI/FlashMessages";
+import { getRecommendation } from "@/Services/recommendation";
 
 const Recommendation = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -21,9 +22,8 @@ const Recommendation = () => {
   const loadCourses = async () => {
     try {
       setLoading(true);
-      const data = await getCourses();
-      console.log("recommendation courses", data);
-      setCourses(data);
+      const data = await getRecommendation();
+      setCourses(data?.recommendations);
     } catch (error) {
       console.error(error);
       setFlash({
