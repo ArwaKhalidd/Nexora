@@ -70,44 +70,44 @@ namespace NexoraAPI.Controllers
                     };
                 }
 
-                // 4. جلب تفاعل الطالب في الـ VLE لحساب ساعات المذاكرة
+                // 4. جلب تقييمات الطالب بدلاً من تفاعلات VLE
                 var studentId = user.StudentId ?? user.Id;
-                var studentVleActivity = await _context.StudentVles
-                    .Where(v => v.IdStudent == studentId) // الفلترة بالـ StudentId الحقيقي أو الـ fallback
+                var studentAssessments = await _context.StudentAssessments
+                    .Where(a => a.IdStudent == studentId) 
                     .ToListAsync();
 
-                // 5. تجهيز بيانات الـ Line Chart
+                // 5. تجهيز بيانات الـ Line Chart بناءً على التقييمات
                 List<MonthlyProgressDto> monthlyProgress;
 
-                if (studentVleActivity.Any())
+                if (studentAssessments.Any())
                 {
-                    // لو عنده تفاعلات حقيقية، بنجمع الـ Clicks ونحولها لساعات (مثلاً كل 50 كليك = ساعة مذاكرة)
-                    int totalClicks = studentVleActivity.Sum(v => v.SumClick ?? 0);
-                    int calculatedHours = totalClicks / 50;
+                    // حساب مجموع الدرجات ومتوسطها لتوزيعها على الشهور (محاكاة)
+                    double totalScore = studentAssessments.Sum(a => a.Score ?? 0);
+                    int avgScore = (int)(totalScore / studentAssessments.Count);
 
                     monthlyProgress = new List<MonthlyProgressDto>
                     {
-                        new() { Month = "Jan", Progress = (int)(totalClicks * 0.4), StudyHours = (int)(calculatedHours * 0.4) },
-                        new() { Month = "Feb", Progress = (int)(totalClicks * 0.3), StudyHours = (int)(calculatedHours * 0.3) },
-                        new() { Month = "Mar", Progress = (int)(totalClicks * 0.9), StudyHours = (int)(calculatedHours * 0.9) },
-                        new() { Month = "Apr", Progress = (int)(totalClicks * 0.5), StudyHours = (int)(calculatedHours * 0.5) },
-                        new() { Month = "May", Progress = (int)(totalClicks * 0.6), StudyHours = (int)(calculatedHours * 0.6) },
-                        new() { Month = "Jun", Progress = (int)(totalClicks * 0.7), StudyHours = (int)(calculatedHours * 0.7) },
-                        new() { Month = "Jul", Progress = totalClicks, StudyHours = calculatedHours }
+                        new() { Month = "Jan", Progress = (int)(avgScore * 0.4), StudyHours = (int)(totalScore * 0.1) },
+                        new() { Month = "Feb", Progress = (int)(avgScore * 0.6), StudyHours = (int)(totalScore * 0.2) },
+                        new() { Month = "Mar", Progress = (int)(avgScore * 0.5), StudyHours = (int)(totalScore * 0.3) },
+                        new() { Month = "Apr", Progress = (int)(avgScore * 0.7), StudyHours = (int)(totalScore * 0.4) },
+                        new() { Month = "May", Progress = (int)(avgScore * 0.8), StudyHours = (int)(totalScore * 0.5) },
+                        new() { Month = "Jun", Progress = (int)(avgScore * 0.9), StudyHours = (int)(totalScore * 0.8) },
+                        new() { Month = "Jul", Progress = avgScore, StudyHours = (int)totalScore }
                     };
                 }
                 else
                 {
-                    // بيانات افتراضية ممتازة للـ UI لو الطالب لسه جديد ومظهرش تفاعلات
+                    // بيانات افتراضية لو الطالب لسه جديد ومظهرش تقييمات
                     monthlyProgress = new List<MonthlyProgressDto>
                     {
-                        new() { Month = "Jan", Progress = 2500, StudyHours = 4000 },
-                        new() { Month = "Feb", Progress = 1800, StudyHours = 3000 },
-                        new() { Month = "Mar", Progress = 9500, StudyHours = 2000 },
-                        new() { Month = "Apr", Progress = 4000, StudyHours = 3000 },
-                        new() { Month = "May", Progress = 4800, StudyHours = 2000 },
-                        new() { Month = "Jun", Progress = 4000, StudyHours = 2800 },
-                        new() { Month = "Jul", Progress = 4200, StudyHours = 3800 }
+                        new() { Month = "Jan", Progress = 40, StudyHours = 100 },
+                        new() { Month = "Feb", Progress = 55, StudyHours = 150 },
+                        new() { Month = "Mar", Progress = 50, StudyHours = 140 },
+                        new() { Month = "Apr", Progress = 65, StudyHours = 180 },
+                        new() { Month = "May", Progress = 70, StudyHours = 200 },
+                        new() { Month = "Jun", Progress = 85, StudyHours = 250 },
+                        new() { Month = "Jul", Progress = 90, StudyHours = 280 }
                     };
                 }
 

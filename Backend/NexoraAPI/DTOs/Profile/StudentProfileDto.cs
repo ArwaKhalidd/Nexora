@@ -1,4 +1,6 @@
-﻿namespace NexoraAPI.DTOs
+using System.Collections.Generic;
+
+namespace NexoraAPI.DTOs
 {
     public class StudentProfileDto
     {

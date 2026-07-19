@@ -1,4 +1,4 @@
-﻿namespace NexoraAPI.DTOs
+namespace NexoraAPI.DTOs
 {
     public class ApiErrorDto
     {
