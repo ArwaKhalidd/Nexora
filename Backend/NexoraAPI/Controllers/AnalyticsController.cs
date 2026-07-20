@@ -41,24 +41,43 @@ namespace NexoraAPI.Controllers
                     return NotFound(new { success = false, message = "المستخدم غير موجود." });
                 }
 
-                // 3. جلب مهارات الطالب الحالي فقط
-                var studentSkills = await _context.StudentSkills
-                    .Where(s => s.UserId == currentUserId)
+                // 3. جلب تقييمات الطالب مع تفاصيل الكورسات والمهارات
+                var studentId = user.StudentId ?? user.Id;
+                var studentAssessments = await _context.StudentAssessments
+                    .Include(sa => sa.IdAssessmentNavigation)
+                        .ThenInclude(a => a.Course)
+                            .ThenInclude(c => c.CourseSkillTags)
+                    .Where(a => a.IdStudent == studentId) 
                     .ToListAsync();
 
-                var skillsProgress = studentSkills.Select(s => {
-                    int percentage = 30; // Beginner كقيمة افتراضية لـ
-                    if (s.TargetLevel.Equals("Advanced", StringComparison.OrdinalIgnoreCase)) percentage = 90;
-                    else if (s.TargetLevel.Equals("Intermediate", StringComparison.OrdinalIgnoreCase)) percentage = 65;
+                // 4. حساب تقدم المهارات من درجات التقييمات
+                var skillScores = new Dictionary<string, List<double>>();
 
-                    return new SkillProgressDto
+                foreach (var sa in studentAssessments)
+                {
+                    if (sa.Score.HasValue && sa.IdAssessmentNavigation?.Course?.CourseSkillTags != null)
                     {
-                        SkillName = s.SkillName,
-                        Percentage = percentage
-                    };
+                        foreach (var tag in sa.IdAssessmentNavigation!.Course!.CourseSkillTags)
+                        {
+                            var skill = tag.SkillName;
+                            if (string.IsNullOrWhiteSpace(skill)) continue;
+
+                            if (!skillScores.ContainsKey(skill))
+                            {
+                                skillScores[skill] = new List<double>();
+                            }
+                            skillScores[skill].Add(sa.Score.Value);
+                        }
+                    }
+                }
+
+                var skillsProgress = skillScores.Select(kv => new SkillProgressDto
+                {
+                    SkillName = kv.Key,
+                    Percentage = (int)kv.Value.Average()
                 }).ToList();
 
-                // لو الطالب لسه معندوش مهارات مضافة، بنحط مهارات افتراضية عشان الـ UI متظهرش فاضية
+                // بيانات افتراضية لو مفيش مهارات مسجلة (نفس الموجود بالواجهة)
                 if (!skillsProgress.Any())
                 {
                     skillsProgress = new List<SkillProgressDto>
@@ -66,15 +85,13 @@ namespace NexoraAPI.Controllers
                         new() { SkillName = "Python", Percentage = 85 },
                         new() { SkillName = "Css", Percentage = 50 },
                         new() { SkillName = "Html", Percentage = 70 },
-                        new() { SkillName = ".Net", Percentage = 90 }
+                        new() { SkillName = ".Net", Percentage = 90 },
+                        new() { SkillName = "Node", Percentage = 15 },
+                        new() { SkillName = "MongoDB", Percentage = 45 },
+                        new() { SkillName = "Django", Percentage = 70 },
+                        new() { SkillName = "Fast api", Percentage = 80 }
                     };
                 }
-
-                // 4. جلب تقييمات الطالب بدلاً من تفاعلات VLE
-                var studentId = user.StudentId ?? user.Id;
-                var studentAssessments = await _context.StudentAssessments
-                    .Where(a => a.IdStudent == studentId) 
-                    .ToListAsync();
 
                 // 5. تجهيز بيانات الـ Line Chart بناءً على التقييمات
                 List<MonthlyProgressDto> monthlyProgress;

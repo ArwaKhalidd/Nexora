@@ -43,6 +43,10 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<CourseReport> CourseReports { get; set; }
 
+    public virtual DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
+
+    public virtual DbSet<QuestionOption> QuestionOptions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Assessment>(entity =>
@@ -74,6 +78,26 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Course).WithMany(p => p.Assessments)
                 .HasForeignKey(d => new { d.CodeModule, d.CodePresentation })
                 .HasConstraintName("FK__assessments__398D8EEE");
+        });
+
+        modelBuilder.Entity<AssessmentQuestion>(entity =>
+        {
+            entity.ToTable("AssessmentQuestions");
+            entity.HasKey(e => e.Id);
+            entity.HasOne(e => e.Assessment)
+                .WithMany()
+                .HasForeignKey(e => e.AssessmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<QuestionOption>(entity =>
+        {
+            entity.ToTable("QuestionOptions");
+            entity.HasKey(e => e.Id);
+            entity.HasOne(e => e.Question)
+                .WithMany(q => q.Options)
+                .HasForeignKey(e => e.QuestionId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Course>(entity =>
