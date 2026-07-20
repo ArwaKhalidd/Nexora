@@ -93,7 +93,8 @@ export default function ChatPage() {
   };
 
   return (
-    <div className=" text-black flex flex-col mt-5 h-[75vh] w-full p-2 items-center gap-5 bg-white/40 shadow-2xl shadow-sky-900/10 backdrop-blur z-20 rounded-4xl ">
+    <div className=" text-black flex flex-col mt-5 h-[75vh] w-full 
+    p-2 items-center gap-5 bg-white/40 shadow-2xl shadow-sky-900/10 backdrop-blur z-20 rounded-4xl ">
       <div
         className="w-full 
       bg-transparent overflow-y-auto mb-20 p-6 flex-1 text-gray-400"
@@ -179,16 +180,16 @@ export default function ChatPage() {
         ))}
       </div>
       <div
-        className="flex items-center mb-3
-    justify-between w-[90%] fixed bottom-0 "
+        className="flex items-center mb-3 flex-col-reverse md:flex-row
+    justify-between w-[90%] fixed bottom-0 gap-3 md:gap-0 "
       >
         <button
           onClick={clearchat}
-          className="bg-red-700 text-sky-50 rounded-md font-serif px-3 py-3 font-bold cursor-pointer duration-700 hover:bg-red-400 w-[15%]"
+          className="bg-red-700 text-sky-50 rounded-md font-serif px-3 py-3 font-bold cursor-pointer duration-700 hover:bg-red-400 w-full md:w-[17%] lg:w-[15%]"
         >
           New Chat
         </button>
-        <div className="flex items-center font-bold justify-between rounded-md font-serif px-3 py-1.5 w-[80%] bg-sky-900 ">
+        <div className="flex items-center font-bold justify-between rounded-md font-serif px-3 py-1.5 w-full md:w-[80%] bg-sky-900 ">
           <input
             value={content}
             onChange={(text) => setContent(text.target.value)}
@@ -200,7 +201,7 @@ export default function ChatPage() {
               }
             }}
             type="text"
-            className="w-[90%] text-start text-xl bg-transparent border-0 outline-0 text-sky-100 p-1 "
+            className="w-full md:w-[90%] text-start text-xl bg-transparent border-0 outline-0 text-sky-100 p-1 "
           />
           <MdOutlineSend
             onClick={handleSubmit}
