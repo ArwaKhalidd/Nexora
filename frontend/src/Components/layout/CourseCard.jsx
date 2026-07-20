@@ -7,7 +7,6 @@ const CourseCard = ({
   course,
   onEnroll,
   onUnEnroll,
-
   onEdit,
   onDelete,
   enrolledCourses = [],
@@ -15,7 +14,6 @@ const CourseCard = ({
   showUnEnroll = false,
 }) => {
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     getCurrentUser().then((res) => {
       if (res.success) {
@@ -89,19 +87,28 @@ const CourseCard = ({
         <div className="flex justify-between">
           <span className="text-slate-500">Students</span>
           <span className="font-medium">
-            {course.studentInfos?.length ?? 0}
+            {course.enrolledCount ?? 0}
           </span>
         </div>
       </div>
 
       {/* Buttons */}
       <div className="flex gap-3 p-5">
-        <Link
-          to={`/courses/${course.codeModule}/${course.codePresentation}`}
-          className="flex-1 rounded-lg border border-slate-300 bg-sky-700 py-2 text-center font-bold text-white transition duration-700 hover:bg-sky-400 hover:text-sky-900"
-        >
-          Details
-        </Link>
+        {user?.role === "Student" ? (
+          <Link
+            to={`/courses/${course.codeModule}/${course.codePresentation}/assessment`}
+            className="flex-1 rounded-lg border border-slate-300 bg-sky-700 py-2 text-center font-bold text-white transition duration-700 hover:bg-sky-400 hover:text-sky-900"
+          >
+            Take Assessment
+          </Link>
+        ) : (
+          <Link
+            to={`/courses/${course.codeModule}/${course.codePresentation}/assessment/add`}
+            className="flex-1 rounded-lg border border-slate-300 bg-sky-700 py-2 text-center font-bold text-white transition duration-700 hover:bg-sky-400 hover:text-sky-900"
+          >
+            Add Assessment
+          </Link>
+        )}
 
         {user?.role === "Student" && (
           <>
