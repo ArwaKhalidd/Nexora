@@ -126,7 +126,8 @@
               "RelativeToolTip": "Data\\Migrations\\20260717134435_enrolledcount.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-17T13:44:35.72Z"
+              "WhenOpened": "2026-07-17T13:44:35.72Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -187,7 +188,8 @@
               "RelativeToolTip": "Controllers\\AnalyticsController.cs",
               "ViewState": "AgIAAIIAAAAAAAAAAAAAAHwAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-16T11:33:38.206Z"
+              "WhenOpened": "2026-07-16T11:33:38.206Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",

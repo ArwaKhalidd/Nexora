@@ -129,6 +129,41 @@ namespace NexoraAPI.Controllers
             }
         }
 
+        // GET: api/Assessments/course/{codeModule}/{codePresentation}
+        // Returns all assessments for a specific course (For Tutors)
+        [HttpGet("course/{codeModule}/{codePresentation}")]
+        public async Task<ActionResult> GetCourseAssessments(string codeModule, string codePresentation)
+        {
+            try
+            {
+                // Verify course exists
+                var courseExists = await _context.Courses
+                    .AnyAsync(c => c.CodeModule == codeModule && c.CodePresentation == codePresentation);
+                if (!courseExists)
+                    return NotFound(new { success = false, message = $"Course '{codeModule} / {codePresentation}' not found." });
+
+                var assessments = await _context.Assessments
+                    .Where(a => a.CodeModule == codeModule && a.CodePresentation == codePresentation)
+                    .Select(a => new
+                    {
+                        a.IdAssessment,
+                        a.AssessmentType,
+                        a.Date,
+                        a.CodeModule,
+                        a.CodePresentation,
+                        QuestionCount = _context.AssessmentQuestions.Count(q => q.AssessmentId == a.IdAssessment),
+                        CompletedByStudents = _context.StudentAssessments.Count(sa => sa.IdAssessment == a.IdAssessment)
+                    })
+                    .ToListAsync();
+
+                return Ok(new { success = true, data = assessments });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Failed to load assessments.", error = ex.Message });
+            }
+        }
+
 
 
         // POST: api/Assessments
