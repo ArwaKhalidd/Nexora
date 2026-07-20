@@ -96,7 +96,7 @@ const Notification = () => {
             flex justify-between items-center
           "
         >
-          <h2 className="text-3xl font-bold text-sky-900">
+          <h2 className="text-sm sm:text-lg lg:text-3xl font-bold text-sky-900">
             You have {counter} new notifications
           </h2>
 
@@ -105,7 +105,7 @@ const Notification = () => {
             className="flex items-center text-sky-700 hover:text-sky-900 transition gap-5"
           >
             <Checkbox />
-            <span className="font-bold text-xl">
+            <span className="font-bold text-xs lg:text-xl">
               Read all
             </span>
           </button>

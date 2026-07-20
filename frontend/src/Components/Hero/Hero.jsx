@@ -230,7 +230,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center text-sky-700/70">
+        <div className="absolute bottom-0 md:bottom-4 left-1/2 flex -translate-x-1/2 flex-col items-center text-sky-700/70">
           <FaArrowDown className="animate-bounce" size={35} />
         </div>
       </section>

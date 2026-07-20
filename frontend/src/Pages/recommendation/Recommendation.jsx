@@ -96,9 +96,9 @@ const Recommendation = () => {
         ))}
 
       <DashboardLayout>
-        <div className="p-8">
+        <div className="p-3">
           {/* Heading & Search */}
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center mt-3">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
               <h1 className="text-3xl font-bold text-sky-900">
                 Recommendation
@@ -166,7 +166,7 @@ const Recommendation = () => {
                 stiffness: 250,
                 damping: 25,
               }}
-              className="fixed -bottom-24 right-6 w-[50%] h-full "
+              className="fixed -bottom-24 right-6 w-[90%] md:w-[50%] h-full "
             >
               <ChatPage />
             </motion.div>
