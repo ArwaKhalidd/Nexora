@@ -20,7 +20,7 @@ const MyDashboard = () => {
             <h2 className="font-extrabold text-3xl bg-linear-to-r mb-2 from-sky-700 to-sky-950 shadow-2xl shadow-white bg-clip-text text-transparent font-serif ">
               SKills Progress
             </h2>
-            <div className="flex-1 overflow-y-auto pr-3 space-y-3 w-full lg:w-[50%] xl:w-[45%] max-h-[35vh] no-scrollbar cursor-grab">
+            <div className="flex-1 overflow-y-auto pr-3 space-y-3 w-full lg:w-[50%] xl:w-[50%] max-h-[35vh] no-scrollbar cursor-grab">
               <ProgressBar name={"Python"} progress={85} />
               <ProgressBar name={"Css"} progress={50} />
               <ProgressBar name={"Html"} progress={70} />
