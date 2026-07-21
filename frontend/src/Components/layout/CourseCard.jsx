@@ -131,12 +131,20 @@ const CourseCard = ({
             )}
           </>
         ) : (
-          <button
-            onClick={() => onAddAssessment(course)}
-            className="w-full rounded-lg border border-slate-300 bg-sky-700 py-2 text-center font-bold text-white transition duration-700 hover:bg-sky-400 hover:text-sky-900"
-          >
-            Add Assessment
-          </button>
+          <div className="flex items-center justify-between gap-3 w-full">
+            <button
+              onClick={() => onAddAssessment(course)}
+              className="w-full rounded-lg border border-slate-300 bg-sky-700 py-2 text-center font-bold text-white transition duration-700 hover:bg-green-600 hover:text-sky-50"
+            >
+              Add Assessment
+            </button>
+            <Link
+              to={`/courses/${course.codeModule}/${course.codePresentation}/assessments`}
+              className="w-full rounded-lg border border-slate-300 bg-sky-700 py-2 text-center font-bold text-white transition duration-700 hover:bg-sky-400 hover:text-sky-50"
+            >
+              View Assessments
+            </Link>
+          </div>
         )}
       </div>
     </div>
