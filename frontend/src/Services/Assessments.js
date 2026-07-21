@@ -5,6 +5,11 @@ export const getStudentAssements = async () => {
   return response.data;
 };
 
+export const getCourseAssessments = async (codeModule,codePresentation) => {
+  const response = await api.get(`/api/Assessments/course/${codeModule}/${codePresentation}`);
+  return response.data;
+}
+
 export const getAvailableAssessments = async () => {
   const response = await api.get("/api/Assessments/available");
   return response.data;
@@ -18,7 +23,7 @@ export const CreateAssessment = async (assessmentData) => {
 
 // get quistions of assessments
 export const getAssesmentQuestions = async (assessmentId) => {
-  const response = await api.get(`/api/Assesments/${assessmentId}/questions`);
+  const response = await api.get(`/api/Assessments/${assessmentId}/questions`);
   return response.data;
 };
 

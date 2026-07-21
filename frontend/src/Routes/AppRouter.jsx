@@ -19,9 +19,8 @@ import Platformsuccess from "@/Pages/global-dashboard/analysis/PlatformSuccess";
 import Studentrisk from "@/Pages/global-dashboard/analysis/StudentRisk";
 import MyCourses from "@/Pages/my-courses/MyCourses";
 import Notification from "@/Pages/notification/Notification";
-
-
-
+import CourseAssessments from "@/Pages/assesments/courseAssessments";
+import QuestionsPage from "@/Pages/assesments/QuestionsPage";
 
 export default function AppRouter() {
   return (
@@ -56,7 +55,12 @@ export default function AppRouter() {
           <Route path="module-performance" element={<ModulePerfo />} />
         </Route>
 
-
+        {/*Assessments routes*/}
+        <Route
+          path="/courses/:codeModule/:codePresentation/assessments"
+          element={<CourseAssessments />}
+        />
+        <Route path="/assessments/:assessmentId" element={<QuestionsPage />} />
 
         {/* Authentication */}
         <Route path="/signin" element={<Signin />} />
