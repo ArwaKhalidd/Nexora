@@ -32,13 +32,13 @@ namespace NexoraAPI.Controllers
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int currentUserId))
                 {
-                    return Unauthorized(new { success = false, message = "لم يتم التعرف على المستخدم، يرجى تسجيل الدخول مجدداً." });
+                    return Unauthorized(new { success = false, message = "User not recognized, please login again." });
                 }
 
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == currentUserId);
                 if (user == null)
                 {
-                    return NotFound(new { success = false, message = "المستخدم غير موجود." });
+                    return NotFound(new { success = false, message = "User not found." });
                 }
 
                 var studentId = user.StudentId ?? user.Id;
@@ -61,7 +61,7 @@ namespace NexoraAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = "حدث خطأ أثناء تحميل بيانات التقييمات", error = ex.Message });
+                return StatusCode(500, new { success = false, message = "An error occurred while loading assessment data.", error = ex.Message });
             }
         }
 
@@ -75,11 +75,11 @@ namespace NexoraAPI.Controllers
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int currentUserId))
                 {
-                    return Unauthorized(new { success = false, message = "لم يتم التعرف على المستخدم، يرجى تسجيل الدخول مجدداً." });
+                    return Unauthorized(new { success = false, message = "User not recognized, please login again." });
                 }
 
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == currentUserId);
-                if (user == null) return NotFound(new { success = false, message = "المستخدم غير موجود." });
+                if (user == null) return NotFound(new { success = false, message = "User not found." });
 
                 var studentId = user.StudentId ?? user.Id;
 
@@ -125,7 +125,7 @@ namespace NexoraAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = "حدث خطأ أثناء تحميل التقييمات المتاحة", error = ex.Message });
+                return StatusCode(500, new { success = false, message = "An error occurred while loading available assessments.", error = ex.Message });
             }
         }
 
@@ -222,7 +222,8 @@ namespace NexoraAPI.Controllers
                     Options = q.Options.Select(o => new QuestionOptionDto
                     {
                         Id = o.Id,
-                        Text = o.Text
+                        Text = o.Text,
+                        IsCorrect = o.IsCorrect
                     }).ToList() 
                 })
                 .ToListAsync();
